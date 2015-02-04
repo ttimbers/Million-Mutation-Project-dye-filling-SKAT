@@ -2,6 +2,12 @@
 ##are significantly different from wild-type. 
 
 get_dichot_pheno  <- function(filename, control_strain) {
+  ##Needs a filename of a .csv file which has 5 columns (Strain, Proportion of amphid dye-fill defects, Proportion of phasmid dye-fill defects, 
+  ##N, and Phenotype Summary) and the name of the strain which is the control for all others to be compared to for the fisher's exact test
+  ##returns a dataframe of 3 columns, named Strain, dyf_amphid and dyf_phasmid. Strain contains strain names and dyf_amphid and dyf_phasmid
+  ##contain 1 if strain's phenotype diverges significantly from wild-type, and 0 if it does not. A 5% FDR (Benjamini-Hochberg procedure) is used 
+  ##to adjust for multiple comparisons. 
+  
   ##load phenotype data
   phenotypes <- read.csv(filename, header=TRUE)
 
@@ -70,6 +76,8 @@ get_dichot_pheno  <- function(filename, control_strain) {
   return(fdr.bh.phenotypes)
 }
 
+##get dichotomous phenotypes for each strain from proportion data
 phenotypes.dichtomous <- get_dichot_pheno("dyf_phenotpe_with_N_and_wt.csv", "VC2010")
+##save this data to a file to be used for SKAT analysis
 write.table(phenotypes.dichtomous, "dyf_phenotypes_dichotomous.txt", sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
