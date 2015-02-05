@@ -1,2 +1,7 @@
 dyf_phenotpe_with_N_and_wt.csv
 dyf_phenotypes_dichotomous.txt
+MMP_SNP_WeightFile.txt
+MMPdyf_indels.txt
+MMPdyf_non-syn_coding.vcf
+MMPdyf_non-syn_coding_no_header.txt
+MMPdyf_snvs.txt
