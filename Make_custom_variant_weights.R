@@ -1,7 +1,15 @@
 ##Make weights file for SKAT
 
-custom_weights <- function(filename) {
-
+custom_weights <- function(filename, weight.KO, weight.inframe.indel, weight.missense) {
+  ##Arguments: 
+  ##filename - a .vcf file with all of the strains you will be using for SKAT analysis
+  ##weight.KO - custom weight to be assigned to knockout mutations (nonsense, splicing and frameshift causing indels)
+  ##weight.inframe - custom weight to be assigned to indels that do not cause a frameshift
+  ##weight.missense - custom weight to be assigned to missense mutations
+  ##
+  ##returns: a dataframe of two columns. The first column, vars.weight, is a list of variant names. The second
+  ##column, weight.weights, is a list of corresponding weights assigned to the variants.
+  
   ##remove header from .vcf file
   system(paste("grep -v '^#' ", filename, " > MMPdyf_non-syn_coding_no_header.txt"))
 
@@ -61,24 +69,24 @@ custom_weights <- function(filename) {
 
   ##get inframe deletions (indel.lables == true and rfcs == no) and assign a weight of 0.5
   indel.inframe <- subset(coding.changes, coding.changes$indel.labels == "yes" & coding.changes$rfcs == "no")
-  weight <- rep(x=0.5, dim(indel.inframe)[1])
+  weight <- rep(x=weight.inframe.indel, dim(indel.inframe)[1])
   indel.inframe <- data.frame(cbind(indel.inframe, weight))
 
   ##frameshift causing indels and assign a weight of 1
   indel.frameshift <- subset(coding.changes, coding.changes$rfcs == "yes")
-  weight <- rep(x=1, dim(indel.frameshift)[1])
+  weight <- rep(x=weight.KO, dim(indel.frameshift)[1])
   indel.frameshift <- data.frame(cbind(indel.frameshift, weight))
 
   ##nonsense mutations and assign a weight of 1
   index.nonsense <- grep("[-][>][*]", coding.changes$aacs)
   nonsense  <- coding.changes[index.nonsense,]
-  weight <- rep(x=1, dim(nonsense)[1])
+  weight <- rep(x=weight.KO, dim(nonsense)[1])
   nonsense <- data.frame(cbind(nonsense, weight))
 
   ##readthrough mutations and assign a weight of 1
   index.readthrough <- grep("[*][-][>]", coding.changes$aacs)
   readthrough  <- coding.changes[index.readthrough,]
-  weight <- rep(x=1, dim(readthrough)[1])
+  weight <- rep(x=weight.KO, dim(readthrough)[1])
   readthrough <- data.frame(cbind(readthrough, weight))
 
   ##indices of missense mutations and assign a weight of 0.25
@@ -86,12 +94,12 @@ custom_weights <- function(filename) {
   muts <- coding.changes[index.muts,]
   index.missense <- grep("[*]", muts$aacs, invert=TRUE)
   missense  <- muts[index.missense,]
-  weight <- rep(x=0.25, dim(missense)[1])
+  weight <- rep(x=weight.missense, dim(missense)[1])
   missense <- data.frame(cbind(missense, weight))
 
   ##indices of splicing mutations and assign a weight of 1
   splicing.defect <- subset(coding.changes, coding.changes$aacs == "NA")
-  weight <- rep(x=1, dim(splicing.defect)[1])
+  weight <- rep(x=weight.KO, dim(splicing.defect)[1])
   splicing.defect <- data.frame(cbind(splicing.defect, weight))
 
   ##combine all mutations
@@ -102,5 +110,5 @@ custom_weights <- function(filename) {
   return(variant.weights.file)
 }
 
-variant.weights <- custom_weights("MMPdyf_non-syn_coding.vcf")
+variant.weights <- custom_weights("MMPdyf_non-syn_coding.vcf", 1.0, 0.5, 0.25)
 write.table(variant.weights, "MMP_SNP_WeightFile.txt", sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE, append=FALSE)
