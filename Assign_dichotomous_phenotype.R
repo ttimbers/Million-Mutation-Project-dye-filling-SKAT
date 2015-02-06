@@ -1,9 +1,10 @@
 ##Do Fisher's exact test followed by a false-discovery rate (Benjamini-Hochberg procedure) p-value adjustment to determine which strains 
 ##are significantly different from wild-type. 
 
-get_dichot_pheno  <- function(filename, control_strain) {
+get_dichot_pheno  <- function(filename, control_strain, phenotype1, phenotype2) {
   ##Needs a filename of a .csv file which has 5 columns (Strain, Proportion of amphid dye-fill defects, Proportion of phasmid dye-fill defects, 
-  ##N, and Phenotype Summary) and the name of the strain which is the control for all others to be compared to for the fisher's exact test
+  ##N, and Phenotype Summary), the name of the strain which is the control for all others to be compared to for the fisher's exact test
+  ##and the name of the first phenotype as well as the second phenotype to be examined.
   ##returns a dataframe of 3 columns, named Strain, dyf_amphid and dyf_phasmid. Strain contains strain names and dyf_amphid and dyf_phasmid
   ##contain 1 if strain's phenotype diverges significantly from wild-type, and 0 if it does not. A 5% FDR (Benjamini-Hochberg procedure) is used 
   ##to adjust for multiple comparisons. 
@@ -72,11 +73,11 @@ get_dichot_pheno  <- function(filename, control_strain) {
   fdr.bh.phenotypes$fdr.bh.phasmid[fdr.bh.results$fdr.bh.phasmid < 0.05] <- 1
   fdr.bh.phenotypes$fdr.bh.phasmid[fdr.bh.results$fdr.bh.phasmid > 0.05] <- 0
 
-  colnames(fdr.bh.phenotypes)  <- c("Strain", "dyf_amphid", "dyf_phasmid")
+  colnames(fdr.bh.phenotypes)  <- c("Strain", phenotype1, phenotype2)
   return(fdr.bh.phenotypes)
 }
 
 ##get dichotomous phenotypes for each strain from proportion data
-phenotypes.dichtomous <- get_dichot_pheno("dyf_phenotpe_with_N_and_wt.csv", "VC2010")
+phenotypes.dichtomous <- get_dichot_pheno("dyf_phenotpe_with_N_and_wt.csv", "VC2010", "dyf_amphid", "dyf_phasmid")
 ##save this data to a file to be used for SKAT analysis
 write.table(phenotypes.dichtomous, "dyf_phenotypes_dichotomous.txt", sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
