@@ -1,8 +1,10 @@
 ##Make snp(variant) set ID (SSID) file for SKAT
 
-make_SSID <- function(vcf_sans_header) {
-  ##takes merged .vcf file without header (arguement: vcf_sans_header) and creates a dataframe from which you 
-  ##can save a snp(variant) set ID (SSID) file for SKAT analysis
+make_SSID <- function(vcf.filename) {
+  ##takes merged .vcf file and creates a dataframe from which you can save a snp(variant) set ID (SSID) 
+  ##file for SKAT analysis
+  ##
+  vcf_sans_header <- paste(substr(vcf.filename, 1, nchar(vcf.filename)-4), "_no_header.txt", sep="")
   
   ##import vcf file without header
   mydata.vcf <- read.table(vcf_sans_header)
@@ -25,7 +27,6 @@ make_SSID <- function(vcf_sans_header) {
 
 ##make SSID file for my set of MMP strains
 ##note - takes some time to read in MMPdyf_non-syn_coding_no_header.txt (derived from merged .vcf file)
-my.SSID <- make_SSID("MMPdyf_non-syn_coding_no_header.txt")
+my.SSID <- make_SSID("MMPdyf_non-syn_coding.vcf")
 ##save SSID file
 write.table(my.SSID, "MMPdyf_non-syn_coding_SSID.txt", sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE, append=FALSE)
-

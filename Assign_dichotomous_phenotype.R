@@ -80,4 +80,3 @@ get_dichot_pheno  <- function(filename, control_strain) {
 phenotypes.dichtomous <- get_dichot_pheno("dyf_phenotpe_with_N_and_wt.csv", "VC2010")
 ##save this data to a file to be used for SKAT analysis
 write.table(phenotypes.dichtomous, "dyf_phenotypes_dichotomous.txt", sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
-
