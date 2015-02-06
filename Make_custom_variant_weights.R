@@ -11,7 +11,7 @@ custom_weights <- function(vcf.filename, weight.KO, weight.inframe.indel, weight
   ##column, weight.weights, is a list of corresponding weights assigned to the variants.
 
   vcf_wout_header <- paste(substr(vcf.filename, 1, nchar(vcf.filename)-4), "_no_header.txt", sep="")
-  vcf_beginning <- substr(vcf.filename, 1, 6)
+  vcf_beginning <- substr(vcf.filename, 1, 3)
   
   ##grep indels and snv's into two separate groups and create text files with this data
   system(paste("grep -h 'INDEL' ", vcf_wout_header, " > ", vcf_beginning, "_indels.txt", sep=""))
@@ -110,5 +110,5 @@ custom_weights <- function(vcf.filename, weight.KO, weight.inframe.indel, weight
   return(variant.weights.file)
 }
 
-variant.weights <- custom_weights("MMPdyf_non-syn_coding.vcf", 1.0, 0.5, 0.25)
+variant.weights <- custom_weights("MMP_non-syn_coding.vcf", 1.0, 0.5, 0.25)
 write.table(variant.weights, "MMP_SNP_WeightFile.txt", sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE, append=FALSE)

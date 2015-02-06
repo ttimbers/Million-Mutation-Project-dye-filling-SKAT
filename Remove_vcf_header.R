@@ -4,4 +4,4 @@ filename.out <- paste(substr(filename, 1, nchar(filename)-4), "_no_header.txt", 
 system(paste("grep -v '^#' ", filename, " > ", filename.out, sep=""))
 }
 
-remove.vcf_header("MMPdyf_non-syn_coding.vcf")
+remove.vcf_header("MMP_non-syn_coding.vcf")

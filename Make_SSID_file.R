@@ -27,6 +27,6 @@ make_SSID <- function(vcf.filename) {
 
 ##make SSID file for my set of MMP strains
 ##note - takes some time to read in MMPdyf_non-syn_coding_no_header.txt (derived from merged .vcf file)
-my.SSID <- make_SSID("MMPdyf_non-syn_coding.vcf")
+my.SSID <- make_SSID("MMP_non-syn_coding.vcf")
 ##save SSID file
-write.table(my.SSID, "MMPdyf_non-syn_coding_SSID.txt", sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE, append=FALSE)
+write.table(my.SSID, "MMP_non-syn_coding_SSID.txt", sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE, append=FALSE)

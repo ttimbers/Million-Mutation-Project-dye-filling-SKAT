@@ -28,7 +28,12 @@ system("mkdir amphid")
 system("mkdir phasmid")
 
 ##make plink files and write amphid phenotype to fam file
-make_plink("MMPdyf_non-syn_coding.vcf", "dyf_phenotypes_dichotomous.txt", 2, "amphid")
+make_plink("MMP_non-syn_coding.vcf", "dyf_phenotypes_dichotomous.txt", 2, "amphid")
+
+vcf.filename  <- "MMP_non-syn_coding.vcf"
+phenotypes_file <- "dyf_phenotypes_dichotomous.txt"
+phenotype_column <- 2
+where_to_save <- "amphid"
 
 ##make plink files and write amphid phenotype to fam file
-make_plink("MMPdyf_non-syn_coding.vcf", "dyf_phenotypes_dichotomous.txt", 3, "phasmid")
+make_plink("MMP_non-syn_coding.vcf", "dyf_phenotypes_dichotomous.txt", 3, "phasmid")

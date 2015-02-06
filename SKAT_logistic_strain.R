@@ -5,10 +5,10 @@ library(SKAT)
 ##
 ##Generate a SNP set data file (SSD) from binary plink formated data files using user specified SNP
 ##sets. 
-Generate_SSD_SetID("phasmid/MMPdyf_non-syn_coding.bed", "phasmid/MMPdyf_non-syn_coding.bim", "phasmid/MMPdyf_non-syn_coding.fam", "MMPdyf_non-syn_coding_SSID.txt", "phasmid/MMPdyf_phasmid.SSD", "phasmid/MMPdyf_phasmid.info")
+Generate_SSD_SetID("phasmid/MMP_non-syn_coding.bed", "phasmid/MMP_non-syn_coding.bim", "phasmid/MMP_non-syn_coding.fam", "MMP_non-syn_coding_SSID.txt", "phasmid/MMP_phasmid.SSD", "phasmid/MMP_phasmid.info")
 
 ##read in fam file
-fam_file <- read.table("phasmid/MMPdyf_non-syn_coding.fam")
+fam_file <- read.table("phasmid/MMP_non-syn_coding.fam")
 
 ##put phenotypes into a vector
 fam_phenotypes_vector <- fam_file$V6
@@ -17,7 +17,7 @@ fam_phenotypes_vector <- fam_file$V6
 SNPweights <- Read_SNP_WeightFile("MMP_SNP_WeightFile.txt")
 
 ##get SSD info from created file
-SSD.info <- Open_SSD("phasmid/MMPdyf_phasmid.SSD", "phasmid/MMPdyf_phasmid.info")
+SSD.info <- Open_SSD("phasmid/MMP_phasmid.SSD", "phasmid/MMP_phasmid.info")
 
 ##create null model based on phenotypes
 Null_Model <- SKAT_Null_Model(fam_phenotypes_vector ~ 1, out_type="D")
@@ -44,10 +44,10 @@ rm(list=ls())
 ##
 ##Generate a SNP set data file (SSD) from binary plink formated data files using user specified SNP
 ##sets. 
-Generate_SSD_SetID("amphid/MMPdyf_non-syn_coding.bed", "amphid/MMPdyf_non-syn_coding.bim", "amphid/MMPdyf_non-syn_coding.fam", "MMPdyf_non-syn_coding_SSID.txt", "amphid/MMPdyf_amphid.SSD", "amphid/MMPdyf_amphid.info")
+Generate_SSD_SetID("amphid/MMP_non-syn_coding.bed", "amphid/MMP_non-syn_coding.bim", "amphid/MMP_non-syn_coding.fam", "MMP_non-syn_coding_SSID.txt", "amphid/MMP_amphid.SSD", "amphid/MMP_amphid.info")
 
 ##read in fam file
-fam_file <- read.table("amphid/MMPdyf_non-syn_coding.fam")
+fam_file <- read.table("amphid/MMP_non-syn_coding.fam")
 
 ##put phenotypes into a vector
 fam_phenotypes_vector <- fam_file$V6
@@ -56,7 +56,7 @@ fam_phenotypes_vector <- fam_file$V6
 SNPweights <- Read_SNP_WeightFile("MMP_SNP_WeightFile.txt")
 
 ##get SSD info from created file
-SSD.info <- Open_SSD("amphid/MMPdyf_amphid.SSD", "amphid/MMPdyf_amphid.info")
+SSD.info <- Open_SSD("amphid/MMP_amphid.SSD", "amphid/MMP_amphid.info")
 
 ##create null model based on phenotypes
 Null_Model <- SKAT_Null_Model(fam_phenotypes_vector ~ 1, out_type="D")
