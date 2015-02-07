@@ -110,5 +110,5 @@ custom_weights <- function(vcf.filename, weight.KO, weight.inframe.indel, weight
   return(variant.weights.file)
 }
 
-variant.weights <- custom_weights("MMP_non-syn_coding.vcf", 1.0, 0.5, 0.25)
+variant.weights <- custom_weights("MMP_non-syn_coding.vcf", 1.0, 0.75, 0.25)
 write.table(variant.weights, "MMP_SNP_WeightFile.txt", sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE, append=FALSE)
