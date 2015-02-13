@@ -82,12 +82,18 @@ rm(list=ls())
 
 
 ##multiple testing corrections########################################################################################
+##Adjust p-value for markers. Only considering markers with > 6 minor allele frequency (MAF)
+library(fdrtool)
 
-df.phasmid <- read.table("/Users/michelleroux/Documents/Tiffany/SKAT/strain_logistic/phasmid/SKAT_phasmid_weights_results", header=TRUE)
+fdr_adjust_greater_6_markers <- function(phenotype.directory) {
+  for (i in list.files(paste("./", phenotype.directory, sep=""),"*_results")) {
+    df.p  <- read.table(paste("./", phenotype.directory, "/", i, sep=""), header=TRUE)
+    df.p <- df.p[which(df.p$N.Marker.All > 6),]
+    df.q <- fdrtool(df.p$P.value, statistic = "pvalue", cutoff.method="fndr")
+    df.p$Q.value  <- df.q$qval
+    write.table(df.p, paste("./", phenotype.directory, "/", i,"_w_qvalue", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
+  }
+}
 
-##FDR adjust p-values
-p <- df.phasmid$P.value[which(df.phasmid$N.Marker.All > 6)]
-fdr.SKAT.bh.phasmid <- p.adjust(p, method = "BH", n = length(p))
-length(which(fdr.SKAT.bh.phasmid < 0.05))
-min(fdr.SKAT.bh.phasmid)
-
+fdr_adjust_greater_6_markers("amphid")
+fdr_adjust_greater_6_markers("phasmid")
