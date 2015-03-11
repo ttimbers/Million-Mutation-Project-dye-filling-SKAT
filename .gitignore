@@ -13,3 +13,7 @@ MMP_non-syn_coding_temp.vcf
 MMP_snvs.txt
 MMPdyf_non-syn.vcf
 vcf_files/
+gknames.txt
+list_VCstrains_vcf.txt
+MMP.vcf.gz
+MMPlibrary.vcf
