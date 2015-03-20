@@ -29,6 +29,7 @@ main <- function() {
 	library(SKAT)
 
 	## Do SKAT on phenotypes data (with and without weights)##############################
+	for p in phenos {	
 		## Navigate to phenotype directory
 	 	system(paste("cd ", p, sep=""))
 	 
@@ -69,9 +70,10 @@ main <- function() {
 
 		##navigate to parent directory (i.e. out of phenotype directory
 		system("cd ..")
+		
+		## do False Discovery Rate analysis
+		fdr_adjust_greater_6_markers(p)
 	}
-	
-	##Still need to add code to do FDR
 }
 
 ## Make snp(variant) set ID (SSID) file for SKAT
