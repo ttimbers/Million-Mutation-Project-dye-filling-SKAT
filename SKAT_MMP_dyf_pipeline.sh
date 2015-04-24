@@ -24,7 +24,7 @@ awk '{print $1}' dyf_phenotypes_dichotomous.txt | grep -h "^VC*" > vcf_files/lis
 ##well as the VC*.combined.vcf files to combine into the merged file.
 ##These all should be in the same directory
 cd vcf_files
-./create_gwas_vcf_MMP.pl > ../MMP.vcf
+../create_gwas_vcf_MMP.pl > ../MMP.vcf
 cd ..
 
 ##create a merged .vcf file with only variants which affect coding regions
