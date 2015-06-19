@@ -25,4 +25,6 @@ arguments:
 
 Example call:
 
-`Bash bin/SKAT_MMP_dyf_driver.sh data data/MMP.vcf.gz data/dyf_phenotpe_with_N_and_wt.csv results/ 1 0.75 0.25
+`Bash bin/SKAT_MMP_dyf_driver.sh data data/MMP.vcf.gz data/dyf_phenotpe_with_N_and_wt.csv results/ 1 0.75 0.25`
+
+### This code does not currently work as is. It is a work in progress right now.
