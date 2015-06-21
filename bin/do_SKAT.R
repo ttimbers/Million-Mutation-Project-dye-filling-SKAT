@@ -1,7 +1,10 @@
 main <- function() {
 	args <- commandArgs(trailingOnly = TRUE)
-	path_to_plink_files <- args[1]
-	weights.file <- args[2]
+	path_to_fam_file <- args[1]
+	path_to_phenotype.filename <- args[2]
+	path_to_plink_files <- args[3]
+  	SSID_file <- args[4]
+	weights.file <- args[5]
 	
 	require(SKAT)
 	require(fdrtool)
@@ -10,14 +13,12 @@ main <- function() {
 	write_to_fam(path_to_fam_file, path_to_phenotype.filename)	
 
 	## Do SKAT on phenotypes data (with and without weights)
-	
-	## Navigate to phenotype directory
-	system(paste("cd ", path_to_plink_files, sep=""))
 	 
 	## Generate a SNP set data file (SSD) from binary plink formated data files using 
 	## user specified SNP sets.
-	Generate_SSD_SetID("*.bed", "*.bim", "*.fam", "../*SSID.txt", "file.SSD", "file.info")
-
+  
+	Generate_SSD_SetID(paste(path_to_plink_files, "/", list.files(path_to_plink_files, pattern='*.bed'), sep=""), paste(path_to_plink_files, "/", list.files(path_to_plink_files, pattern='*.bim'), sep=""), paste(path_to_plink_files, "/", list.files(path_to_plink_files, pattern='*.fam'), sep=""), SSID_file, paste(path_to_plink_files, "/file.SSD", sep=""), paste(path_to_plink_files, "/data/file.info", sep=""))
+	
 	## read in fam file
 	fam_file <- read.table("*.fam")
 		
@@ -59,7 +60,6 @@ main <- function() {
 	
 	##navigate to parent directory (i.e. out of phenotype directory
 	system("cd ..")
-	}
 }
 
 ## Adds dichotomous phenotype data to plink fam file
