@@ -28,7 +28,7 @@ make_SSID <- function(vcfwoutheader.filename) {
   library(stringr)
   seq_tag  <- "SN=[a-zA-Z0-9.]{1,}|CODING=[a-zA-Z0-9.]{1,}"
   sequence_names  <- str_extract(mydata.vcf$V8, seq_tag)
-  sequence_names  <- sub("SN= | CODING=", "", sequence_names)
+  sequence_names  <- sub("SN=|CODING=", "", sequence_names)
 
   vars <- as.character(variants)
   seqs  <- as.character(sequence_names)

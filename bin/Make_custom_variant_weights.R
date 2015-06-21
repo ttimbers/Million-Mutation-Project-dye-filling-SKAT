@@ -1,3 +1,5 @@
+##Currently broken...
+
 ## Make weights file for SKAT
 
 main <- function() {
@@ -7,7 +9,7 @@ main <- function() {
 	vcf.file <- args[1]
 	weight.KO <- args[2]
 	weight.inframe <- args[3]
-    weight.missense <- args[4]
+  weight.missense <- args[4]
 	weights.file <- args[5]
 	
 	
@@ -30,6 +32,7 @@ custom_weights <- function(vcf.filename, weight.KO, weight.inframe.indel, weight
   
   ## grep indels and snv's into two separate groups and create text files with this data
   system(paste("grep -h 'INDEL' ", vcf.filename, " > ", vcf_beginning, ".indels", sep=""))
+  system(paste("grep -h 'CODING=' ", vcf.filename, " >> ", vcf_beginning, ".indels", sep=""))
   system(paste("grep -v 'INDEL' ", vcf.filename, " > ", vcf_beginning, ".snvs", sep=""))
 
   ## import text files created above
