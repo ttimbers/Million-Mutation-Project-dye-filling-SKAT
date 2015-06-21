@@ -83,8 +83,11 @@ get_dichotomous_phenotype  <- function(strain_name, defect_count, N, control_str
 
   fdr.bh.results$phenotype <- fdr.bh.phenotypes$fdr.bh
 
-  colnames(fdr.bh.results)  <- c("strain", "pvals", "fdr.bh", "phenotype")
-  return(fdr.bh.results)
+  ## make dataframe with better column order
+  data_to_return <- data.frame(strain, fdr.bh.phenotypes$fdr.bh, pvals, fdr.bh)
+  
+  colnames(data_to_return)  <- c("strain", "phenotype", "pvals", "fdr.bh")
+  return(data_to_return)
 }
 
 main()

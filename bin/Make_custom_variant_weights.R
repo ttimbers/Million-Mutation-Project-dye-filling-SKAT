@@ -1,12 +1,16 @@
 ## Make weights file for SKAT
 
 main <- function() {
+	require(stringr)
+
 	args <- commandArgs(trailingOnly = TRUE)
 	vcf.file <- args[1]
 	weight.KO <- args[2]
 	weight.inframe <- args[3]
     weight.missense <- args[4]
 	weights.file <- args[5]
+	
+	
 	variant.weights <- custom_weights(vcf.file, weight.KO, weight.inframe, weight.missense)
 	write.table(variant.weights, weights.file, sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE, append=FALSE)
 }
@@ -21,16 +25,16 @@ custom_weights <- function(vcf.filename, weight.KO, weight.inframe.indel, weight
   ## returns: a dataframe of two columns. The first column, vars.weight, is a list of variant names. The second
   ## column, weight.weights, is a list of corresponding weights assigned to the variants.
 
-  vcf_wout_header <- paste(substr(vcf.filename, 1, nchar(vcf.filename)-4), "_no_header.txt", sep="")
-  vcf_beginning <- substr(vcf.filename, 1, 3)
+  #vcf_wout_header <- paste(substr(vcf.filename, 1, nchar(vcf.filename)-4), "_no_header.txt", sep="")
+  vcf_beginning <- sub(".vcf", "", vcf.filename)
   
   ## grep indels and snv's into two separate groups and create text files with this data
-  system(paste("grep -h 'INDEL' ", vcf_wout_header, " > ", vcf_beginning, "_indels.txt", sep=""))
-  system(paste("grep -v 'INDEL' ", vcf_wout_header, " > ", vcf_beginning, "_snvs.txt", sep=""))
+  system(paste("grep -h 'INDEL' ", vcf.filename, " > ", vcf_beginning, ".indels", sep=""))
+  system(paste("grep -v 'INDEL' ", vcf.filename, " > ", vcf_beginning, ".snvs", sep=""))
 
   ## import text files created above
-  variants.indels <- read.table(paste(vcf_beginning, "_indels.txt", sep=""))
-  variants.snvs <- read.table(paste(vcf_beginning, "_snvs.txt", sep=""))
+  variants.indels <- read.table(paste(vcf_beginning, ".indels", sep=""))
+  variants.snvs <- read.table(paste(vcf_beginning, ".snvs", sep=""))
 
   ## Get variant names, amino acid change, indel label and reading frame change info for indels
   ## get indel variant names
@@ -38,7 +42,6 @@ custom_weights <- function(vcf.filename, weight.KO, weight.inframe.indel, weight
   vars.indel <- as.character(variants.indels.names)
 
   ##get indel amino acid change
-  library(stringr)
   aac_tag.indel  <- "AAC=[a-zA-Z0-9*>-_]{1,}"
   amino.acid.change.indel  <- str_extract(variants.indels$V8, aac_tag.indel)
   amino.acid.change.indel  <- sub("AAC=", "", amino.acid.change.indel)
@@ -78,29 +81,29 @@ custom_weights <- function(vcf.filename, weight.KO, weight.inframe.indel, weight
   rfcs <- c(rfcs.indel, rfcs.snv)
   coding.changes  <- data.frame(cbind(vars, aacs, indel.labels, rfcs))
 
-  ##get inframe deletions (indel.lables == true and rfcs == no) and assign a weight of 0.5
+  ##get inframe deletions (indel.lables == true and rfcs == no) and assign a specified weight
   indel.inframe <- subset(coding.changes, coding.changes$indel.labels == "yes" & coding.changes$rfcs == "no")
   weight <- rep(x=weight.inframe.indel, dim(indel.inframe)[1])
   indel.inframe <- data.frame(cbind(indel.inframe, weight))
 
-  ##frameshift causing indels and assign a weight of 1
+  ##frameshift causing indels and assign a specified weight
   indel.frameshift <- subset(coding.changes, coding.changes$rfcs == "yes")
   weight <- rep(x=weight.KO, dim(indel.frameshift)[1])
   indel.frameshift <- data.frame(cbind(indel.frameshift, weight))
 
-  ##nonsense mutations and assign a weight of 1
+  ##nonsense mutations and assign a specified weight
   index.nonsense <- grep("[-][>][*]", coding.changes$aacs)
   nonsense  <- coding.changes[index.nonsense,]
   weight <- rep(x=weight.KO, dim(nonsense)[1])
   nonsense <- data.frame(cbind(nonsense, weight))
 
-  ##readthrough mutations and assign a weight of 1
+  ##readthrough mutations and assign a specified weight
   index.readthrough <- grep("[*][-][>]", coding.changes$aacs)
   readthrough  <- coding.changes[index.readthrough,]
   weight <- rep(x=weight.KO, dim(readthrough)[1])
   readthrough <- data.frame(cbind(readthrough, weight))
 
-  ##indices of missense mutations and assign a weight of 0.25
+  ##indices of missense mutations and assign a specified weight
   index.muts <- grep("[-][>]", coding.changes$aacs)
   muts <- coding.changes[index.muts,]
   index.missense <- grep("[*]", muts$aacs, invert=TRUE)
@@ -108,7 +111,7 @@ custom_weights <- function(vcf.filename, weight.KO, weight.inframe.indel, weight
   weight <- rep(x=weight.missense, dim(missense)[1])
   missense <- data.frame(cbind(missense, weight))
 
-  ##indices of splicing mutations and assign a weight of 1
+  ##indices of splicing mutations and assign a specified weight
   splicing.defect <- subset(coding.changes, coding.changes$aacs == "NA")
   weight <- rep(x=weight.KO, dim(splicing.defect)[1])
   splicing.defect <- data.frame(cbind(splicing.defect, weight))

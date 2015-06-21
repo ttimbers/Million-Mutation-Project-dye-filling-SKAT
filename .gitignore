@@ -19,3 +19,5 @@ MMP.vcf.gz
 MMPlibrary.vcf
 other/
 data/
+.pversion
+plink.log

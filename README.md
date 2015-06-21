@@ -7,7 +7,7 @@ be made public upon publication of the manuscript.
 
 ## Dependencies
 
-`Bash Shell`, `Perl`, `Plink`, `R` and `R packages SKAT, stringr, fdrtool`
+`Bash Shell`, `Perl`, `Plink v1.90b1g`, `R` and `R packages SKAT, stringr, fdrtool`
 
 ## How to use it
 
