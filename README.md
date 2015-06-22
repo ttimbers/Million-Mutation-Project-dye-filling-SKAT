@@ -16,5 +16,4 @@ be made public upon publication of the manuscript.
 2. Navigate the Shell to the root directory of this project
 3. Type `make`
 
-### This code currently works, but the phenotype data has not yet been released, and so
-### you will hit an error without providing this data. This will be done very shortly. 
+#### This code currently works, but the phenotype data has not yet been released, and so you will hit an error without providing this data. This will be done very shortly. 
