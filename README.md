@@ -1,4 +1,5 @@
 # Million-Mutation-Project-dye-filling-SKAT
+
 Genomic data and code to accompany the SKAT analysis of Million Mutation Project strains 
 dye-filling phenotypes reported in Timbers et al.
 
@@ -7,24 +8,12 @@ be made public upon publication of the manuscript.
 
 ## Dependencies
 
-`Bash Shell`, `Perl`, `Plink v1.90b1g`, `R` and `R packages SKAT version 0.95, stringr, fdrtool`
+`Bash Shell`, `Make`, `Perl`, `Plink v1.90b1g`, `R` and `R packages SKAT version 0.95, stringr, fdrtool`
 
 ## How to use it
 
-Call the Bash driver script, `bin/SKAT_MMP_dyf_driver.sh` and pass it the following 
-arguments:
+1. Navigate the Shell to the root directory of the project.
+2. Type `make`
 
-1. the path to the .vcf file containing all the genomic data for all the MMP strains 
-	(e.g. MMP.vcf.gz )
-2. the path to your phenotype file 
-3. the path to the directory where you would like to save your results
-4. Weight to be assigned to "Knockout" (e.g. nonsense, frameshift indels, splice site) 
-	mutations
-5. Weight to be assigned to in-frame indel mutations
-6. Weight to be assigned to missense mutations
-
-Example call:
-
-`Bash bin/SKAT_MMP_dyf_driver.sh data/MMP.vcf.gz data/dyf_phenotpe_with_N_and_wt.csv results/ 1 0.75 0.25`
-
-### This code does not currently work as is. It is a work in progress right now.
+### This code currently works, but the phenotype data has not yet been released. This
+will be done very shortly. 
