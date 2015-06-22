@@ -32,11 +32,12 @@ custom_weights <- function(vcf.filename, weight.KO, weight.inframe.indel, weight
   
   ## grep indels and snv's into two separate groups and create text files with this data
   system(paste("grep -h 'INDEL' ", vcf.filename, " > ", vcf_beginning, ".indels", sep=""))
-  system(paste("grep -h 'CODING=' ", vcf.filename, " >> ", vcf_beginning, ".indels", sep=""))
+  system(paste("grep -h 'CODING=' ", vcf.filename, " > ", vcf_beginning, ".coding", sep=""))
   system(paste("grep -v 'INDEL' ", vcf.filename, " > ", vcf_beginning, ".snvs", sep=""))
 
   ## import text files created above
   variants.indels <- read.table(paste(vcf_beginning, ".indels", sep=""))
+  variants.coding <- read.table(paste(vcf_beginning, ".coding", sep=""))
   variants.snvs <- read.table(paste(vcf_beginning, ".snvs", sep=""))
 
   ## Get variant names, amino acid change, indel label and reading frame change info for indels
@@ -59,8 +60,25 @@ custom_weights <- function(vcf.filename, weight.KO, weight.inframe.indel, weight
   reading.frame.change.indel  <- sub("RFC=", "", reading.frame.change.indel)
   rfcs.indel <- as.character(reading.frame.change.indel)
 
-  ##Get variant names and reading frame change info for snvs
-  ##get snv variant names
+  ## For .coding Get variant names, amino acid change, reading 
+  ## frame change info
+  variants.coding.names <- variants.coding$V3
+  vars.coding <- as.character(variants.coding.names)
+  
+  ##get .coding amino acid change
+  effect_tag.coding  <- "effect=[a-zA-Z_]{1,}"
+  effect.coding  <- str_extract(variants.coding$V8, effect_tag.coding)
+  effect.coding  <- sub("effect=", "", effect.coding)
+  effect.coding  <- as.character(effect.coding)
+  
+  ##get indel label from coding
+  indel.label.coding <- rep("yes", dim(variants.coding)[1])
+  
+  ##get reading frame change from coding
+  rfcs.coding <- effect.coding
+  
+  ## Get variant names and reading frame change info for snvs
+  ## get snv variant names
   variants.snvs.names <- variants.snvs$V3
   vars.snvs <- as.character(variants.snvs.names)
 
@@ -78,19 +96,19 @@ custom_weights <- function(vcf.filename, weight.KO, weight.inframe.indel, weight
   rfcs.snv <- as.character(reading.frame.change.snv)
 
   ##concatenate indel variants with snv variants
-  vars <- c(vars.indel, vars.snvs)
-  aacs  <- c(aacs.indel, aacs.snv)
-  indel.labels <- c(indel.label.indels, indel.label.snvs)
-  rfcs <- c(rfcs.indel, rfcs.snv)
+  vars <- c(vars.indel, vars.coding, vars.snvs)
+  aacs  <- c(aacs.indel, effect.coding, aacs.snv)
+  indel.labels <- c(indel.label.indels, indel.label.coding, indel.label.snvs)
+  rfcs <- c(rfcs.indel, rfcs.coding, rfcs.snv)
   coding.changes  <- data.frame(cbind(vars, aacs, indel.labels, rfcs))
 
   ##get inframe deletions (indel.lables == true and rfcs == no) and assign a specified weight
-  indel.inframe <- subset(coding.changes, coding.changes$indel.labels == "yes" & coding.changes$rfcs == "no")
+  indel.inframe <- subset(coding.changes, coding.changes$indel.labels == "yes" & coding.changes$rfcs == "no" | coding.changes$indel.labels == "yes" & coding.changes$rfcs == "noframeshift")
   weight <- rep(x=weight.inframe.indel, dim(indel.inframe)[1])
   indel.inframe <- data.frame(cbind(indel.inframe, weight))
 
   ##frameshift causing indels and assign a specified weight
-  indel.frameshift <- subset(coding.changes, coding.changes$rfcs == "yes")
+  indel.frameshift <- subset(coding.changes, coding.changes$rfcs == "yes" | coding.changes$rfcs == "frameshift" | coding.changes$rfcs == "across_exon_boundary")
   weight <- rep(x=weight.KO, dim(indel.frameshift)[1])
   indel.frameshift <- data.frame(cbind(indel.frameshift, weight))
 
