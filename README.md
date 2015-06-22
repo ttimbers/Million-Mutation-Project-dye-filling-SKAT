@@ -10,6 +10,15 @@ be made public upon publication of the manuscript.
 
 `Bash Shell`, `Make`, `Perl`, `Plink v1.90b1g`, `R` and `R packages SKAT (version 0.95), stringr, fdrtool`
 
+This code assumes that you have put `Plink` in your `Bash Shell`'s `$PATH`. This can be 
+done by adding the following to `.bash_profile` in your home directory (`cd ~/` to get 
+there).
+
+~~~
+# added Plink
+export PATH="/path/to/where/you/installed/plink:$PATH"
+~~~
+
 ## How to use it
 
 1. Clone this repository
