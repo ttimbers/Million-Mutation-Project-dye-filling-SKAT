@@ -1,5 +1,3 @@
-##Currently broken...
-
 ## Make weights file for SKAT
 
 main <- function() {
@@ -9,7 +7,7 @@ main <- function() {
 	vcf.file <- args[1]
 	weight.KO <- args[2]
 	weight.inframe <- args[3]
-  weight.missense <- args[4]
+  	weight.missense <- args[4]
 	weights.file <- args[5]
 	
 	
