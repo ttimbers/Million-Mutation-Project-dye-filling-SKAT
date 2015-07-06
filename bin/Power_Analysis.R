@@ -20,6 +20,7 @@ main <- function(){
   
   require(pwr)
   require(dplyr)
+  require(plyr)
   
   ## Read in phenotype file
   phenotypes <- read.csv(path_to_phenotypes, header = TRUE, sep = "\t")
@@ -71,15 +72,19 @@ main <- function(){
   
   ## Add phenotypes to SSID
   phenotypes_reduced <- phenotypes[,1:2]
-  df_for_pwr <- dplyr::right_join(SSID, phenotypes_reduced, by = "strain")
+  df_for_pwr <- right_join(SSID, phenotypes_reduced, by = "strain")
   ##write.table(df_for_pwr, file=)
   
   ## Determine average effect size for significantly variants from SKAT analysis
   ##
-  ##test <- dplyr::count(df_for_pwr, Species, wt = Sepal.Length)
+  effect_size <- ddply(df_for_pwr, c("gene"), summarise,
+                 N_variants  = length(variant),
+                 N_cases = sum(phenotype))
+  
+  effect_size$N_controls <- effect_size$N_variants - effect_size$N_cases
   
   
-  
+ 
   ## Make a list of genes (& their number of vars) that are significantly associated 
   ## with the phenotype
   sig_genes <- SKAT_results$SetID[which(SKAT_results$Q.value < 0.3)]
