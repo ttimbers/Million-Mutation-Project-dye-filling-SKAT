@@ -1,6 +1,21 @@
+## Tiffany A. Timbers
+## July 25, 2015
+##
+## Makefile pipeline for SKAT analysis of genomic and phenotype data of Million Mutation 
+## Project strains dye-filling phenotypes reported in Timbers et al.
+##
+## Dependencies: Bash Shell, Make, Perl, plink v1.90b1g (assumes that you have made plink 
+## executable and put it in your Bash Shell's $PATH), R and R packages 
+## SKAT (version 0.95), stringr, fdrtool
+
+
+## Final files to be generated from SKAT analysis
 all: data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt
 
-## Do analysis of amphid data	
+##======================================================================================
+## Analysis of amphid dye-filling phenotype
+##======================================================================================
+
 data/phenotype_amphid_dyf_dichotomous.csv: bin/Assign_dichotomous_phenotype.R data/phenotype_amphid_dyf.csv
 	Rscript bin/Assign_dichotomous_phenotype.R data/phenotype_amphid_dyf.csv data/phenotype_amphid_dyf_dichotomous.csv
 
@@ -26,7 +41,10 @@ data/MMP_non-syn_coding_SSID.txt: bin/Make_SSID_file.R data/filteredMMP_noHeader
 data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/amphid_dyf/filteredMMP.fam data/MMP_SNP_WeightFile.txt data/MMP_non-syn_coding_SSID.txt
 	Rscript bin/do_SKAT.R data/amphid_dyf/filteredMMP.fam data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf data/MMP_non-syn_coding_SSID.txt data/MMP_SNP_WeightFile.txt
 
-## Do analysis of phasmid data	
+##======================================================================================
+## Analysis of phasmid dye-filling phenotype
+##======================================================================================
+
 data/phenotype_phasmid_dyf_dichotomous.csv: bin/Assign_dichotomous_phenotype.R data/phenotype_phasmid_dyf.csv
 	Rscript bin/Assign_dichotomous_phenotype.R data/phenotype_phasmid_dyf.csv data/phenotype_phasmid_dyf_dichotomous.csv
 
@@ -37,6 +55,8 @@ data/phasmid_dyf/filteredMMP.fam data/phasmid_dyf/filteredMMP.bim data/phasmid_d
 data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/phasmid_dyf/filteredMMP.fam data/MMP_SNP_WeightFile.txt data/MMP_non-syn_coding_SSID.txt
 	Rscript bin/do_SKAT.R data/phasmid_dyf/filteredMMP.fam data/phenotype_phasmid_dyf_dichotomous.csv data/phasmid_dyf data/MMP_non-syn_coding_SSID.txt data/MMP_SNP_WeightFile.txt	
 
+
+## files to delete if to reset to project start before analysis
 clean:
 	-rm -f data/phenotype_amphid_dyf_dichotomous.csv data/list_VCstrains_vcf.txt data/filteredMMP.vcf
 	-rm -f data/filteredMMP_noHeader.vcf data/MMP_SNP_WeightFile.txt
