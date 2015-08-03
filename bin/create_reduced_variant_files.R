@@ -22,14 +22,16 @@ main <- function() {
   
   ## make SSID file with only those variants (i.e. reduce the SSID list to only
   ## those >= min_num_variants)
-  genes_to_include <- data.frame(SSID[which(SSID_count[2] >= min_num_variants),1])
+  #genes_to_include <- data.frame(SSID_count[which(SSID_count[,2] >= min_num_variants),1])
+  genes_to_include <- data.frame(SSID_count[SSID_count$freq >= min_num_variants, 1])
+  #df[df$aged <= df$laclen, ] 
   colnames(genes_to_include) <- ("gene")
   require(dplyr)
   gene_table <- tbl_df(genes_to_include)
   SSID_table <- tbl_df(SSID)
   SSID_count_greater_or_equal_to_min <- semi_join(SSID_table, gene_table)
   SSID_to_print <- data.frame(lapply(SSID_count_greater_or_equal_to_min, as.character), stringsAsFactors=FALSE)
-  
+
   ## save SSID file
   write.table(SSID_to_print, file = SSID_output_file, row.names = FALSE, col.names = FALSE, quote = FALSE)
   
@@ -48,3 +50,4 @@ main <- function() {
 }
 
 main()
+
