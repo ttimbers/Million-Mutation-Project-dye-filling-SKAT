@@ -27,11 +27,11 @@ main <- function() {
   require(dplyr)
   gene_table <- tbl_df(genes_to_include)
   SSID_table <- tbl_df(SSID)
-  SSID_count_greater_or_equal_to_min <- inner_join(SSID_table, gene_table)
+  SSID_count_greater_or_equal_to_min <- semi_join(SSID_table, gene_table)
   SSID_to_print <- data.frame(lapply(SSID_count_greater_or_equal_to_min, as.character), stringsAsFactors=FALSE)
   
   ## save SSID file
-  write.table(SSID_to_print, file = SSID_output_file, row.names = FALSE, col.names = FALSE, quote = FALSE, sep='\t')
+  write.table(SSID_to_print, file = SSID_output_file, row.names = FALSE, col.names = FALSE, quote = FALSE)
   
   ## make a .vcf file with only those variants
   require(dplyr)
@@ -39,7 +39,7 @@ main <- function() {
   colnames(variant_list) <- ("V3")
   var_table <- tbl_df(variant_list)
   vcf_table <- tbl_df(vcf)
-  vcf_count_greater_or_equal_to_min <- inner_join(vcf_table, var_table)
+  vcf_count_greater_or_equal_to_min <- semi_join(vcf_table, var_table)
   vcf_to_print <- data.frame(lapply(vcf_count_greater_or_equal_to_min, as.character), stringsAsFactors=FALSE)
   
   ## save .vcf file
