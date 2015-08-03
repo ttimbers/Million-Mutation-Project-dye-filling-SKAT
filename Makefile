@@ -36,12 +36,21 @@ data/list_VCstrains_vcf.txt: data/phenotype_amphid_dyf_dichotomous.csv
 ## Creates one merged .vcf file for only the strains that were assayed (listed in a file
 ## called list_VCstrains_vcf.txt. Uses -protein argument creates a merged .vcf file with
 ## only variants which affect coding regions	
-data/filteredMMP.vcf: data/MMP.vcf.gz bin/filter_MMP_variants.pl data/list_VCstrains_vcf.txt	
-	gzcat data/MMP.vcf.gz | perl bin/filter_MMP_variants.pl -input - -output data/filteredMMP.vcf -strain data/list_VCstrains_vcf.txt -protein
+data/MMPcoding.vcf: data/MMP.vcf.gz bin/filter_MMP_variants.pl data/list_VCstrains_vcf.txt	
+	gzcat data/MMP.vcf.gz | perl bin/filter_MMP_variants.pl -input - -output data/MMPcoding.vcf -strain data/list_VCstrains_vcf.txt -protein
 
 ## Create a version of the merged .vcf file without the header	
-data/filteredMMP_noHeader.vcf: data/filteredMMP.vcf
-	grep -v '^#' data/filteredMMP.vcf > data/filteredMMP_noHeader.vcf	
+## data/MMPcoding_noHeader.vcf: data/MMPcoding.vcf
+##	grep -v '^#' data/MMPcoding.vcf > data/MMPcoding_noHeader.vcf
+
+## Create SSID file for SKAT analysis
+data/MMPcoding.SSID: bin/Make_SSID_file.R data/MMPcoding.vcf
+	Rscript bin/Make_SSID_file.R data/MMPcoding.vcf data/MMPcoding.SSID
+
+## Create a filtered SSID file and vcf file for only variants from those genes which have
+## a specified minimum number of alleles (we chose 6)
+data/MMPfiltered.vcf data/MMPfiltered.SSID: bin/create_reduced_variant_files.R data/MMPcoding.vcf data/MMPcoding.SSID
+	rscript bin/create_reduced_variant_files.R data/MMPcoding.vcf data/MMPcoding.SSID 6 data/MMPfiltered.vcf data/MMPfiltered.SSID
 
 ## Create a custom weights for each variant based off of the type of mutation. 
 ## Script Arguments:
@@ -50,21 +59,17 @@ data/filteredMMP_noHeader.vcf: data/filteredMMP.vcf
 ## 3: weight to assign inframe deletions
 ## 4: weight to assign missense mutations
 ## 5: name of file to save variant weights to 	
-data/MMP_SNP_WeightFile.txt: bin/Make_custom_variant_weights.R data/filteredMMP_noHeader.vcf
-	Rscript bin/Make_custom_variant_weights.R data/filteredMMP_noHeader.vcf 1 0.75 0.25 data/MMP_SNP_WeightFile.txt
+data/MMP_SNP_WeightFile.txt: bin/Make_custom_variant_weights.R data/MMPfiltered.vcf
+	Rscript bin/Make_custom_variant_weights.R data/MMPfiltered.vcf 1 0.75 0.25 data/MMP_SNP_WeightFile.txt	
 
 ## Create binary plink files for amphid phenotype from filtered .vcf file
-data/amphid_dyf/filteredMMP.fam data/amphid_dyf/filteredMMP.bim data/amphid_dyf/filteredMMP.bed data/amphid_dyf/filteredMMP.log: data/filteredMMP.vcf
+data/amphid_dyf data/amphid_dyf/MMPfiltered.fam data/amphid_dyf/MMPfiltered.bim data/amphid_dyf/MMPfiltered.bed data/amphid_dyf/MMPfiltered.log: data/MMPfiltered.vcf
 	mkdir data/amphid_dyf
-	plink --vcf data/filteredMMP.vcf --allow-extra-chr --out data/amphid_dyf/filteredMMP
-
-## Create SSID file for SKAT analysis
-data/MMP_non-syn_coding_SSID.txt: bin/Make_SSID_file.R data/filteredMMP_noHeader.vcf
-	Rscript bin/Make_SSID_file.R data/filteredMMP_noHeader.vcf data/MMP_non-syn_coding_SSID.txt
+	plink --vcf data/MMPfiltered.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out data/amphid_dyf/MMPfiltered
 
 ## Perform SKAT analysis
-data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/amphid_dyf/filteredMMP.fam data/MMP_SNP_WeightFile.txt data/MMP_non-syn_coding_SSID.txt
-	Rscript bin/do_SKAT.R data/amphid_dyf/filteredMMP.fam data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf data/MMP_non-syn_coding_SSID.txt data/MMP_SNP_WeightFile.txt
+data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID
+	Rscript bin/do_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
 
 
 ##======================================================================================
@@ -84,27 +89,28 @@ data/phenotype_phasmid_dyf_dichotomous.csv: bin/Assign_dichotomous_phenotype.R d
 	Rscript bin/Assign_dichotomous_phenotype.R data/phenotype_phasmid_dyf.csv data/phenotype_phasmid_dyf_dichotomous.csv
 
 ## Create binary plink files for phasmid phenotype from filtered .vcf file
-data/phasmid_dyf/filteredMMP.fam data/phasmid_dyf/filteredMMP.bim data/phasmid_dyf/filteredMMP.bed data/phasmid_dyf/filteredMMP.log: data/filteredMMP.vcf
+data/phasmid_dyf data/phasmid_dyf/MMPfiltered.fam data/phasmid_dyf/MMPfiltered.bim data/phasmid_dyf/MMPfiltered.bed data/phasmid_dyf/MMPfiltered.log: data/MMPfiltered.vcf
 	mkdir data/phasmid_dyf
-	plink --vcf data/filteredMMP.vcf --allow-extra-chr --out data/phasmid_dyf/filteredMMP
+	plink --vcf data/MMPfiltered.vcf --allow-extra-chr --out data/phasmid_dyf/MMPfiltered
 
 ## Perform SKAT analysis (use SSID file made above)
-data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/phasmid_dyf/filteredMMP.fam data/MMP_SNP_WeightFile.txt data/MMP_non-syn_coding_SSID.txt data/phenotype_phasmid_dyf_dichotomous.csv
-	Rscript bin/do_SKAT.R data/phasmid_dyf/filteredMMP.fam data/phenotype_phasmid_dyf_dichotomous.csv data/phasmid_dyf data/MMP_non-syn_coding_SSID.txt data/MMP_SNP_WeightFile.txt	
+data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/phasmid_dyf/filteredMMP.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_phasmid_dyf_dichotomous.csv
+	Rscript bin/do_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_dichotomous.csv data/phasmid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt	
 
 
 ## files to delete if to reset to project start before analysis
 clean:
-	-rm -f data/phenotype_amphid_dyf_dichotomous.csv data/list_VCstrains_vcf.txt data/filteredMMP.vcf
-	-rm -f data/filteredMMP_noHeader.vcf data/MMP_SNP_WeightFile.txt
-	-rm -f data/amphid_dyf/filteredMMP.fam data/amphid_dyf/filteredMMP.bim data/amphid_dyf/filteredMMP.bed data/amphid_dyf/filteredMMP.log
-	-rm -f data/amphid_dyf/file*
-	-rmdir data/amphid_dyf
-	-rm -f data/MMP_non-syn_coding_SSID.txt
+	-rm -f data/phenotype_amphid_dyf_dichotomous.csv 
+	-rm -f data/phenotype_phasmid_dyf_dichotomous.csv
+	-rm -f data/list_VCstrains_vcf.txt
+	-rm -f data/MMPcoding.vcf
+	-rm -f data/MMPcoding_noHeader.vcf
+	-rm -f data/MMPcoding.SSID
+	## -rm -f data/MMPfiltered.vcf data/MMPfiltered.SSID
+	-rm -f data/MMP_SNP_WeightFile.txt
+	-rm -f data/amphid_dyf/MMPfiltered.fam data/amphid_dyf/MMPfiltered.bim data/amphid_dyf/MMPfiltered.bed data/amphid_dyf/MMPfiltered.log
 	-rm -f data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt
-	-rm -f data/MMP_non-syn_coding_SSID.txt.temp 
-	-rm -f data/filteredMMP_noHeader.coding data/filteredMMP_noHeader.indels data/filteredMMP_noHeader.snvs
-	-rm -f data/phasmid_dyf/filteredMMP.fam data/phasmid_dyf/filteredMMP.bim data/phasmid_dyf/filteredMMP.bed data/phasmid_dyf/filteredMMP.log
-	-rm -f data/phasmid_dyf/file*
-	-rmdir data/phasmid_dyf
+	-rmdir amphid/dyf
+	-rm -f data/phasmid_dyf/MMPfiltered.fam data/phasmid_dyf/MMPfiltered.bim data/phasmid_dyf/MMPfiltered.bed data/phasmid_dyf/MMPfiltered.log
 	-rm -f data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt
+	-rmdir phasmid/dyf
