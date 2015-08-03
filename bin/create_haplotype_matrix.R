@@ -15,6 +15,7 @@
 ##                (2) Bash Shell
 
 main <- function() {
+  ## command line arguements
   args <- commandArgs(trailingOnly = TRUE)
   vcf_file <- args[1]
   first_genotype_column <- args[2]
