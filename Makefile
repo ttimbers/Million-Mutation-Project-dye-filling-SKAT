@@ -98,7 +98,19 @@ data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_resul
 	Rscript bin/do_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_dichotomous.csv data/phasmid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt	
 
 
-## files to delete if to reset to project start before analysis
+##======================================================================================
+## Power Analysis
+##======================================================================================
+
+## Create Haplotype matrix and SNP location file
+
+
+
+
+##======================================================================================
+## Clean: files to delete if to reset to project start before analysis
+##======================================================================================
+
 clean:
 	-rm -f data/phenotype_amphid_dyf_dichotomous.csv 
 	-rm -f data/phenotype_phasmid_dyf_dichotomous.csv
