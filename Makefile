@@ -6,7 +6,7 @@
 ##
 ## Dependencies: Bash Shell, Make, Perl, plink v1.90b1g (assumes that you have made plink 
 ## executable and put it in your Bash Shell's $PATH), R and R packages 
-## SKAT (version 0.95), stringr, fdrtool
+## SKAT (version 0.95), stringr, fdrtool, plyr and dplyr
 
 
 ## Final files to be generated from SKAT analysis
@@ -49,6 +49,9 @@ data/MMPcoding.SSID: bin/Make_SSID_file.R data/MMPcoding.vcf
 
 ## Create a filtered SSID file and vcf file for only variants from those genes which have
 ## a specified minimum number of alleles (we chose 6)
+## IMPORTANT! There is a bug in write.table() and this script needs to be run INSIDE 
+## RStudio to get the correct number of data entries for MMPfiltered.vcf and 
+## MMPfiltered.SSID
 data/MMPfiltered.vcf data/MMPfiltered.SSID: bin/create_reduced_variant_files.R data/MMPcoding.vcf data/MMPcoding.SSID
 	rscript bin/create_reduced_variant_files.R data/MMPcoding.vcf data/MMPcoding.SSID 6 data/MMPfiltered.vcf data/MMPfiltered.SSID
 

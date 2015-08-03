@@ -8,7 +8,7 @@ be made public upon publication of the manuscript.
 
 ## Dependencies
 
-`Bash Shell`, `Make`, `Perl`, `Plink v1.90b1g`, `R` and `R packages SKAT (version 0.95), stringr, fdrtool and plyr`
+`Bash Shell`, `Make`, `Perl`, `Plink v1.90b1g`, `R` and `R packages SKAT (version 0.95), stringr, fdrtool, dplyr and plyr`
 
 This code assumes that you have put `Plink` in your `Bash Shell`'s `$PATH`. This can be 
 done by adding the following to `.bash_profile` in your home directory (`cd ~/` to get 
