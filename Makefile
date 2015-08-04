@@ -106,8 +106,8 @@ data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_resul
 ##======================================================================================
 
 ## Create Haplotype matrix and SNP location file
-
-
+data/haplotype.matrix data/SNPlocation.file: bin/create_haplotype_matrix.R data/MMPfiltered.vcf 
+	Rscript bin/create_haplotype_matrix.R data/MMPfiltered.vcf 10 data/haplotype.matrix data/SNPlocation.file
 
 
 ##======================================================================================

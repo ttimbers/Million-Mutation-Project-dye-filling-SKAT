@@ -32,17 +32,21 @@ main <- function() {
   SSID_count_greater_or_equal_to_min <- semi_join(SSID_table, gene_table)
   SSID_to_print <- data.frame(lapply(SSID_count_greater_or_equal_to_min, as.character), stringsAsFactors=FALSE)
 
+  print("SSID_tp_print dimensions are: ")
+  print(dim(SSID_to_print))
+  
   ## save SSID file
   write.table(SSID_to_print, file = SSID_output_file, row.names = FALSE, col.names = FALSE, quote = FALSE)
   
   ## make a .vcf file with only those variants
-  require(dplyr)
   variant_list <- data.frame(SSID_count_greater_or_equal_to_min[,2])
   colnames(variant_list) <- ("V3")
   var_table <- tbl_df(variant_list)
   vcf_table <- tbl_df(vcf)
   vcf_count_greater_or_equal_to_min <- semi_join(vcf_table, var_table)
   vcf_to_print <- data.frame(lapply(vcf_count_greater_or_equal_to_min, as.character), stringsAsFactors=FALSE)
+  print("vcf_tp_print dimensions are: ")
+  print(dim(vcf_to_print))
   
   ## save .vcf file
   system(paste("grep -E '^#' ", vcf_file, " > ", vcf_output_file, sep=""))

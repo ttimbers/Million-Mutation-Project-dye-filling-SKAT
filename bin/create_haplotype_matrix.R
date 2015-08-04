@@ -18,30 +18,20 @@ main <- function() {
   ## command line arguements
   args <- commandArgs(trailingOnly = TRUE)
   vcf_file <- args[1]
-  first_genotype_column <- args[2]
-  haplotype_output_file <- args[3]
-  SNP_location_output_file <- args[4]
-  
+  haplotype_output_file <- args[2]
+  SNP_location_output_file <- args[3]
   
   ## load libraries
   require(stringr)
   require(plyr)
   
-  
   ## Make haplotype matrix
   
-  ## make a variable to hold the filename I will give to a rectangular version of the vcf 
-  ## file (withoug column 1)
-  vcf_df_no_header_name <- paste(vcf_file, ".no_header", sep="")
-  
-  ## make a rectangular version of the vcf file (withoug column 1)
-  system(paste("grep -E -v '^##' ", vcf_file, " | cut -d ' ' -f 2,3,", first_genotype_column, "- > ", vcf_df_no_header_name, sep = ''))
-  
   ## read rectangular version into R
-  vcf_df_no_header <- read.table(vcf_df_no_header_name, header=TRUE)
+  vcf <- read.table(vcf_file, header=FALSE)
   
   ## reduce matrix
-  temp_df <- vcf_df_no_header[2:dim(vcf_df_no_header)[2]]
+  temp_df <- df <- subset(vcf, select = -c(V1, V2, V4, V5, V6, V7, V8, V9))
   
   ## replace 0/0 with 0, and 1/1 with 1
   temp_df <- data.frame(lapply(temp_df, as.character), stringsAsFactors=FALSE)
@@ -57,9 +47,8 @@ main <- function() {
   ## save to haplotype matrix to output file
   write.table(haplotype_matrix, file = haplotype_output_file, row.names = FALSE, col.names = FALSE, quote = FALSE)
   
-  
   ## Make SNP location vector
-  SNP_location_vector <- vcf_df_no_header[,1]
+  SNP_location_vector <- vcf[,2]
   
   ## save to SNP location vector to output file
   write.table(SNP_location_vector, file = SNP_location_output_file, row.names = FALSE, col.names = FALSE, quote = FALSE)
