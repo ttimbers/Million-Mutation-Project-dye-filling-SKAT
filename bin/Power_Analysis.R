@@ -18,6 +18,7 @@ path_to_SKAT_analysis <- "data/amphid_dyf/SKAT_version1_0_9_results/SKAT_pANDq_n
 path_to_SSID <- "data/MMPfiltered.SSID"
 path_to_vcf <- "data/MMPfiltered.vcf"
 output_gvsp_file <- "data/MMPfiltered.gvsp"
+output_effect_size_file <- "data/MMPfiltered.effectsize"
 
 main <- function(){
   args <- commandArgs(trailingOnly = TRUE)
@@ -26,6 +27,7 @@ main <- function(){
   path_to_SSID <- args[3]
   path_to_vcf <- args[4]
   output_gvsp_file <- args[5]
+  output_effect_size_file <- args[6]
   
   require(pwr)
   require(dplyr)
@@ -75,16 +77,20 @@ main <- function(){
   ## save gvsp file
   write.table(gvsp, output_gvsp_file, row.names = FALSE, quote = FALSE, append = FALSE)
   
-  ## Determine average effect size for significantly variants from SKAT analysis
-  ##
-  effect_size <- ddply(df_for_pwr, c("gene"), summarise,
+  ## Determine average effect size for all genes variants from SKAT analysis
+  effect_size <- ddply(gvsp, c("gene"), summarise,
                  N_variants  = length(variant),
                  N_cases = sum(phenotype))
   
   effect_size$N_controls <- effect_size$N_variants - effect_size$N_cases
+  effect_size$prob_minor <- effect_size$N_cases/effect_size$N_variants
+  effect_size$prob_major <- (40 - effect_size$N_cases) / ((40 - effect_size$N_cases) + (440 - effect_size$N_controls))
+  effect_size$odds_minor <- effect_size$prob_minor / (1 - effect_size$prob_minor)
+  effect_size$odds_major <- effect_size$prob_major / (1 - effect_size$prob_major)
+  effect_size$odds_ratio <- effect_size$odds_minor / effect_size$odds_major 
   
+  write.table(effect_size, output_effect_size_file, row.names = FALSE, quote = FALSE, append = FALSE)
   
- 
   ## Make a list of genes (& their number of vars) that are significantly associated 
   ## with the phenotype
   sig_genes <- SKAT_results$SetID[which(SKAT_results$Q.value < 0.3)]
