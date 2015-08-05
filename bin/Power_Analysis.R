@@ -18,7 +18,7 @@ path_to_SKAT_analysis <- "data/amphid_dyf/SKAT_version1_0_9_results/SKAT_pANDq_n
 path_to_SSID <- "data/MMPfiltered.SSID"
 path_to_vcf <- "data/MMPfiltered.vcf"
 output_gvsp_file <- "data/MMPfiltered.gvsp"
-output_effect_size_file <- "data/MMPfiltered.effectsize"
+output_effect_size_file <- "data/amphid_dyf/MMPfiltered.effectsize"
 
 main <- function(){
   args <- commandArgs(trailingOnly = TRUE)
@@ -77,6 +77,10 @@ main <- function(){
   ## save gvsp file
   write.table(gvsp, output_gvsp_file, row.names = FALSE, quote = FALSE, append = FALSE)
   
+  ## Calculate some useful constants for effect size analysis
+  N_dyf_strains <- sum(phenotypes[,2])
+  N_wt_strains <- dim(phenotypes)[1] - sum(phenotypes[,2])
+  
   ## Determine average effect size for all genes variants from SKAT analysis
   effect_size <- ddply(gvsp, c("gene"), summarise,
                  N_variants  = length(variant),
@@ -84,10 +88,12 @@ main <- function(){
   
   effect_size$N_controls <- effect_size$N_variants - effect_size$N_cases
   effect_size$prob_minor <- effect_size$N_cases/effect_size$N_variants
-  effect_size$prob_major <- (40 - effect_size$N_cases) / ((40 - effect_size$N_cases) + (440 - effect_size$N_controls))
+  effect_size$prob_major <- (N_dyf_strains - effect_size$N_cases) / ((N_dyf_strains - effect_size$N_cases) + (N_wt_strains - effect_size$N_controls))
   effect_size$odds_minor <- effect_size$prob_minor / (1 - effect_size$prob_minor)
   effect_size$odds_major <- effect_size$prob_major / (1 - effect_size$prob_major)
   effect_size$odds_ratio <- effect_size$odds_minor / effect_size$odds_major 
+  
+  newdata <- effect_size[order(effect_size$odds_ratio),]
   
   write.table(effect_size, output_effect_size_file, row.names = FALSE, quote = FALSE, append = FALSE)
   
@@ -96,19 +102,8 @@ main <- function(){
   sig_genes <- SKAT_results$SetID[which(SKAT_results$Q.value < 0.3)]
   
   ## subset sig genes from SSID to get table with gene & variants
-  
-  SSID_sig <- SSID[SSID$V1 %in% sig_genes,] 
-  colnames(SSID_sig) <- c("gene", "variant")
-  
-  ## Calculate overall sample size
-  N = length(phenotypes$phenotype)
-  
-  ## alpha = 0.05
-  alpha = 0.05
-  
-  ## calculate power using two proportions (unequal n) test
-  ##pwr.2p2n.test()
-  
+  effect_size_sig <- effect_size[effect_size$gene %in% sig_genes,] 
+  mean_effect_size <- mean(effect_size_sig$odds_ratio)
 }
 
 ## Function to find matching values in a data frame and then return row and column names 
