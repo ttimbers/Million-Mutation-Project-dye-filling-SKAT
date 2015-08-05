@@ -16,7 +16,8 @@ main <- function(){
   path_to_phenotypes <- args[1]
   path_to_SKAT_analysis <- args[2]
   path_to_SSID <- args[3]
-  path_to_vcf_w_oneline_header <- args[4]
+  path_to_vcf <- args[4]
+  output_data_file <- args[5]
   
   require(pwr)
   require(dplyr)
@@ -29,15 +30,18 @@ main <- function(){
   SKAT_results <- read.table(path_to_SKAT_analysis, header = TRUE, sep="\t")
   
   ## Read in SSID file
-  SSID <- read.table(path_to_SSID, sep="\t")
+  SSID <- read.table(path_to_SSID)
   colnames(SSID) <- c("gene", "variant")
   
-  ## Reduce SSID to only variants which were included in SKAT analysis
-  genes_to_incl <- SKAT_results$SetID
-  SSID <- SSID[SSID$gene %in% genes_to_incl,]
-  
   ## Read in VCF file with oneline header
-  VCF <- read.table(path_to_vcf_w_oneline_header, header=TRUE)
+  ## make a variable to hold the filename I will give to a rectangular version of the vcf 
+  ## file (withoug column 1)
+  vcf_df_no_header_name <- paste(path_to_vcf, ".no_header", sep="")
+ 
+  ## make a rectangular version of the vcf file (withoug column 1)
+  system(paste("grep -E -v '^##' ", path_to_vcf, " | cut -d$'\t' -f 3,10- > ", vcf_df_no_header_name, sep = ''))
+  
+  VCF <- read.table(vcf_df_no_header_name, header=TRUE)
   
   ## Initialize variables to append to in loop
   strain <- c()
@@ -73,7 +77,7 @@ main <- function(){
   ## Add phenotypes to SSID
   phenotypes_reduced <- phenotypes[,1:2]
   df_for_pwr <- right_join(SSID, phenotypes_reduced, by = "strain")
-  ##write.table(df_for_pwr, file=)
+  write.table(df_for_pwr, file=output_data_file, row.names = FALSE, quote = FALSE, append = FALSE)
   
   ## Determine average effect size for significantly variants from SKAT analysis
   ##
