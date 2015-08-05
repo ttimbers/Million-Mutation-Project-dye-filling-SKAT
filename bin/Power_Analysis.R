@@ -17,7 +17,7 @@ path_to_phenotypes <- "data/phenotype_amphid_dyf_dichotomous.csv"
 path_to_SKAT_analysis <- "data/amphid_dyf/SKAT_version1_0_9_results/SKAT_pANDq_no_weights_results.txt"
 path_to_SSID <- "data/MMPfiltered.SSID"
 path_to_vcf <- "data/MMPfiltered.vcf"
-output_data_file <- "data/MMPfiltered.gvsp"
+output_gvsp_file <- "data/MMPfiltered.gvsp"
 
 main <- function(){
   args <- commandArgs(trailingOnly = TRUE)
@@ -25,7 +25,7 @@ main <- function(){
   path_to_SKAT_analysis <- args[2]
   path_to_SSID <- args[3]
   path_to_vcf <- args[4]
-  output_data_file <- args[5]
+  output_gvsp_file <- args[5]
   
   require(pwr)
   require(dplyr)
@@ -61,43 +61,19 @@ main <- function(){
   
   ## get row and column names of all 1/1 values
   var_and_strain <- Which.names(vcf, value="1/1")
+  colnames(var_and_strain) <- c("variant", "strain")
   
+  ## Add genes to data frame
+  gvsp <- left_join(var_and_strain, SSID)
+  gvsp <- gvsp[c("gene", "variant", "strain")]
   
-  ## Initialize variables to append to in loop
-  strain <- c()
-  add_on_after_strain <- c()
-  add_on_after_variant <- c()
-  add_on_after_gene <- c()
-   
-  ## Loop through variants and input strain name into SSID_sig
-  for (i in 1:dim(SSID)[1]) {
-  #for (i in 36) {
-    var_row <- VCF[which(VCF$ID == SSID$variant[i]), ]
-    var_strain <- names(which(apply(var_row, 2, function(x) any(grepl("1/1", x)))))
-    #print(i)
-    #print(var_strain)
-    
-    if (length(var_strain) == 2){
-      add_on_after_strain <- c(add_on_after_strain, var_strain[2])
-      add_on_after_variant <- c(add_on_after_variant, as.character(SSID$variant[i]))
-      add_on_after_gene <- c(add_on_after_gene, as.character(SSID$gene[i]))} 
-      strain <- c(strain, var_strain[1])
-  }
+  ## Add phenotypes to data frame
+  ps <- phenotypes[,1:2]
+  gvsp <- left_join(gvsp, phenotypes[,1:2])
+  gvsp <- gvsp[c("gene", "variant", "strain")]
   
-  ## Add strain to SSID_sig
-  SSID$strain <- strain
-  
-  ## Make a dataframe of strains that had duplicated variants
-  add_on_after_all <- data.frame(add_on_after_strain, add_on_after_variant, add_on_after_gene) 
-  colnames(add_on_after_all) <- c("gene", "variant", "strain")
-  
-  ## Concatenate these two data frames together
-  SSID <- rbind(SSID, add_on_after_all)
-  
-  ## Add phenotypes to SSID
-  phenotypes_reduced <- phenotypes[,1:2]
-  df_for_pwr <- right_join(SSID, phenotypes_reduced, by = "strain")
-  write.table(df_for_pwr, file=output_data_file, row.names = FALSE, quote = FALSE, append = FALSE)
+  ## save gvsp file
+  write.table(gvsp, output_gvsp_file, row.names = FALSE, quote = FALSE, append = FALSE)
   
   ## Determine average effect size for significantly variants from SKAT analysis
   ##
