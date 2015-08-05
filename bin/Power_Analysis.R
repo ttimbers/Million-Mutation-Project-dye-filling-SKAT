@@ -11,6 +11,14 @@
 ## grep -v "#" data/filteredMMP_oneline_header.vcf >> data/MMP_oneline_header.vcf
 ## rm data/filteredMMP_oneline_header.vcf
 
+## use below when run inside RStudio:
+setwd("Documents/Post-Doc/Manuscripts/MMP_dyf_screen/code/Million-Mutation-Project-dye-filling-SKAT/")
+path_to_phenotypes <- "data/phenotype_amphid_dyf_dichotomous.csv"
+path_to_SKAT_analysis <- "data/amphid_dyf/SKAT_version1_0_9_results/SKAT_pANDq_no_weights_results.txt"
+path_to_SSID <- "data/MMPfiltered.SSID"
+path_to_vcf <- "data/MMPfiltered.vcf"
+output_data_file <- "data/MMPfiltered.gvsp"
+
 main <- function(){
   args <- commandArgs(trailingOnly = TRUE)
   path_to_phenotypes <- args[1]
@@ -41,7 +49,19 @@ main <- function(){
   ## make a rectangular version of the vcf file (withoug column 1)
   system(paste("grep -E -v '^##' ", path_to_vcf, " | cut -d$'\t' -f 3,10- > ", vcf_df_no_header_name, sep = ''))
   
-  VCF <- read.table(vcf_df_no_header_name, header=TRUE)
+  vcf <- read.table(vcf_df_no_header_name, header=TRUE)
+  
+  ## make variants row names
+  rownames(vcf) <- vcf[,1]
+  vcf[,1] <- NULL
+  
+  ## Change from factors to character (and preserve row names)
+  i <- sapply(vcf, is.factor)
+  vcf[i] <- lapply(vcf[i], as.character)
+  
+  ## get row and column names of all 1/1 values
+  var_and_strain <- Which.names(vcf, value="1/1")
+  
   
   ## Initialize variables to append to in loop
   strain <- c()
@@ -107,6 +127,15 @@ main <- function(){
   ## calculate power using two proportions (unequal n) test
   ##pwr.2p2n.test()
   
+}
+
+## Function to find matching values in a data frame and then return row and column names 
+Which.names <- function(DF, value){
+  ind <- which(DF==value, arr.ind=TRUE)
+  row_name <- rownames(DF)[ind[,1]]
+  col_name <- colnames(DF)[ind[,2]]
+  row_N_cols <- data.frame(row_name, col_name)
+  return(row_N_cols)
 }
 
 main()
