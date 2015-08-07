@@ -74,6 +74,22 @@ data/amphid_dyf data/amphid_dyf/MMPfiltered.fam data/amphid_dyf/MMPfiltered.bim 
 data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID
 	Rscript bin/do_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
 
+## Calculate effect size
+data/MMPfiltered.gvsp data/amphid_dyf/MMPfiltered.effectsize: bin/calculate_effect_size.R data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf
+	Rscript bin/calculate_effect_size.R data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf data/MMPfiltered.gvsp data/amphid_dyf/MMPfiltered.effectsize
+
+## Create Table S3 (Genome-wide association results from the SKAT of MMP DNA 
+## sequence variance and amphid dye-filling when variants were assigned biologically 
+## relevant weights. Results are sorted by p-value)
+data/Table_S3.csv: bin/create_supp_results_table.R data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/MMPfiltered.effectsize
+	Rscript bin/create_supp_results_table.R data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/MMPfiltered.effectsize data/Table_S3.csv
+
+## Create Table S5 (Table S5. Genome-wide association results from the SKAT of MMP DNA 
+## sequence variance and amphid dye-filling when all variants were weighted equally. 
+## Results are sorted by p-value)
+data/Table_S5.csv: bin/create_supp_results_table.R data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/MMPfiltered.effectsize
+	Rscript bin/create_supp_results_table.R data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/MMPfiltered.effectsize data/Table_S5.csv
+
 
 ##======================================================================================
 ## Analysis of phasmid dye-filling phenotype
@@ -100,6 +116,21 @@ data/phasmid_dyf data/phasmid_dyf/MMPfiltered.fam data/phasmid_dyf/MMPfiltered.b
 data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/phasmid_dyf/filteredMMP.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_phasmid_dyf_dichotomous.csv
 	Rscript bin/do_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_dichotomous.csv data/phasmid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt	
 
+## Calculate effect size
+data/MMPfiltered.gvsp data/phasmid_dyf/MMPfiltered.effectsize: bin/calculate_effect_size.R data/phenotype_phasmid_dyf_dichotomous.csv data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf
+	Rscript bin/calculate_effect_size.R data/phenotype_phasmid_dyf_dichotomous.csv data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf data/MMPfiltered.gvsp data/phasmid_dyf/MMPfiltered.effectsize
+
+## Create Table S4 (Genome-wide association results from the SKAT of MMP DNA 
+## sequence variance and phasmid dye-filling when variants were assigned biologically 
+## relevant weights. Results are sorted by p-value)
+data/Table_S4.csv: bin/create_supp_results_table.R data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/MMPfiltered.effectsize
+	Rscript bin/create_supp_results_table.R data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/MMPfiltered.effectsize data/Table_S4.csv
+
+## Create Table S6 (Genome-wide association results from the SKAT of MMP DNA 
+## sequence variance and phasmid dye-filling when all variants were weighted equally. 
+## Results are sorted by p-value)
+data/Table_S6.csv: bin/create_supp_results_table.R data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/MMPfiltered.effectsize
+	Rscript bin/create_supp_results_table.R data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/MMPfiltered.effectsize data/Table_S6.csv
 
 ##======================================================================================
 ## Power Analysis
@@ -107,7 +138,7 @@ data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_resul
 
 ## Create Haplotype matrix and SNP location file
 data/haplotype.matrix data/SNPlocation.file: bin/create_haplotype_matrix.R data/MMPfiltered.vcf 
-	Rscript bin/create_haplotype_matrix.R data/MMPfiltered.vcf 10 data/haplotype.matrix data/SNPlocation.file
+	Rscript bin/create_haplotype_matrix.R data/MMPfiltered.vcf data/haplotype.matrix data/SNPlocation.file
 
 
 ##======================================================================================

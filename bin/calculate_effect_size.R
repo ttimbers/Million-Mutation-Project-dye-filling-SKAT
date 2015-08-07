@@ -1,6 +1,6 @@
 ## Tiffany Timbers, July 5, 2015
-## Power analysis of SKAT for dye-filling phenotypes from 485 MMP strains from 
-## Timbers et al. 2005 
+## Calculate effect size for varaints from SKAT for dye-filling phenotypes from 480 MMP 
+## strains from Timbers et al. 2005 
 
 ## Depends on a .vcf file with only a oneline header that contains strain names
 ## This file was made with the following command in the Shell:
@@ -12,13 +12,13 @@
 ## rm data/filteredMMP_oneline_header.vcf
 
 ## use below when run inside RStudio:
-setwd("Documents/Post-Doc/Manuscripts/MMP_dyf_screen/code/Million-Mutation-Project-dye-filling-SKAT/")
-path_to_phenotypes <- "data/phenotype_amphid_dyf_dichotomous.csv"
-path_to_SKAT_analysis <- "data/amphid_dyf/SKAT_version1_0_9_results/SKAT_pANDq_no_weights_results.txt"
-path_to_SSID <- "data/MMPfiltered.SSID"
-path_to_vcf <- "data/MMPfiltered.vcf"
-output_gvsp_file <- "data/MMPfiltered.gvsp"
-output_effect_size_file <- "data/amphid_dyf/MMPfiltered.effectsize"
+#setwd("Documents/Post-Doc/Manuscripts/MMP_dyf_screen/code/Million-Mutation-Project-dye-filling-SKAT/")
+#path_to_phenotypes <- "data/phenotype_amphid_dyf_dichotomous.csv"
+#path_to_SKAT_analysis <- "data/amphid_dyf/SKAT_version1_0_9_results/SKAT_pANDq_no_weights_results.txt"
+#path_to_SSID <- "data/MMPfiltered.SSID"
+#path_to_vcf <- "data/MMPfiltered.vcf"
+#output_gvsp_file <- "data/MMPfiltered.gvsp"
+#output_effect_size_file <- "data/amphid_dyf/MMPfiltered.effectsize"
 
 main <- function(){
   args <- commandArgs(trailingOnly = TRUE)
