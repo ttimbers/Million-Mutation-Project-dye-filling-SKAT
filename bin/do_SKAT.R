@@ -55,7 +55,7 @@ main <- function() {
 	write.table(p.values.weights, paste(path_to_plink_files, "/SKAT_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## do False Discovery Rate analysis for SKAT with weights
-	pq_weights <- fdr_adjust(p.values.weights, 6)
+	pq_weights <- fdr_adjust(p.values.weights)
 	write.table(pq_weights, paste(path_to_plink_files, "/SKAT_pANDq_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 	
 	##navigate to parent directory (i.e. out of phenotype directory
@@ -79,8 +79,7 @@ write_to_fam <- function(path, phenotypes) {
 }
 
 ## generate q-values using false discovery rate using fdrtool()
-fdr_adjust <- function(pvals, minNmarkers) {
-    pvals <- pvals[which(pvals$N.Marker.All > minNmarkers),]
+fdr_adjust <- function(pvals) {
     qvals <- fdrtool(pvals$P.value, statistic = "pvalue", cutoff.method="fndr")
     pvals$Q.value  <- qvals$qval
     pAndqvals <- pvals
