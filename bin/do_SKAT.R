@@ -43,7 +43,7 @@ main <- function() {
 	write.table(p.values.no.weights, paste(path_to_plink_files,"/SKAT_no_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## do False Discovery Rate analysis for SKAT without weights
-	pq_wo_weights <- fdr_adjust(p.values.no.weights, 6)
+	pq_wo_weights <- fdr_adjust(p.values.no.weights)
 	write.table(pq_wo_weights, paste(path_to_plink_files, "/SKAT_pANDq_no_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## perform SKAT on all sets of variants with weights
