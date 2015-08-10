@@ -23,14 +23,14 @@ main <- function(){
   ## drop unnecessary columns
   SKAT_results$N.Marker.Test <- NULL
   SKAT_results$N.Marker.All <- NULL
-  effectsize_tmp <- effectsize[,1:4]
-  effectsize_tmp$effect_size <- effectsize[,9]
+  effectsize_tmp <- effectsize[,1:5]
+  effectsize_tmp$effect_size <- effectsize[,10]
   effectsize <- effectsize_tmp
   rm(effectsize_tmp)
   
   ## rename columns
   colnames(SKAT_results) <- c("sequence", "p-value", "q-value")
-  colnames(effectsize) <- c("sequence", "number_of_strains_with_mutations", "number_of_strains_with_dyf_phenotype", "number_of_strains_with_wild-type_phenotype", "effects_size")
+  colnames(effectsize) <- c("public_gene_name", "sequence", "number_of_strains_with_mutations", "number_of_strains_with_dyf_phenotype", "number_of_strains_with_wild-type_phenotype", "effects_size")
   
   ## join SKAT_results and effectsize
   joined_data <- left_join(SKAT_results, effectsize, by = "sequence")

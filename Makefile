@@ -48,12 +48,12 @@ data/MMPcoding.SSID: bin/Make_SSID_file.R data/MMPcoding.vcf
 	Rscript bin/Make_SSID_file.R data/MMPcoding.vcf data/MMPcoding.SSID
 
 ## Create a filtered SSID file and vcf file for only variants from those genes which have
-## a specified minimum number of alleles (we chose 6)
+## a specified minimum number of alleles (we chose 7)
 ## IMPORTANT! There is a bug in write.table() and this script needs to be run INSIDE 
 ## RStudio to get the correct number of data entries for MMPfiltered.vcf and 
 ## MMPfiltered.SSID
 data/MMPfiltered.vcf data/MMPfiltered.SSID: bin/create_reduced_variant_files.R data/MMPcoding.vcf data/MMPcoding.SSID
-	rscript bin/create_reduced_variant_files.R data/MMPcoding.vcf data/MMPcoding.SSID 6 data/MMPfiltered.vcf data/MMPfiltered.SSID
+	rscript bin/create_reduced_variant_files.R data/MMPcoding.vcf data/MMPcoding.SSID 7 data/MMPfiltered.vcf data/MMPfiltered.SSID
 
 ## Create a custom weights for each variant based off of the type of mutation. 
 ## Script Arguments:
@@ -76,7 +76,7 @@ data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results
 
 ## Calculate effect size
 data/MMPfiltered.gvsp data/amphid_dyf/MMPfiltered.effectsize: bin/calculate_effect_size.R data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf
-	Rscript bin/calculate_effect_size.R data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf data/amphid_dyf/MMPfiltered.gvsp data/amphid_dyf/MMPfiltered.effectsize
+	Rscript bin/calculate_effect_size.R data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf data/gene_publicName_N_sequenceName.txt data/amphid_dyf/MMPfiltered.gvsp data/amphid_dyf/MMPfiltered.effectsize
 
 ## Create Table S3 (Genome-wide association results from the SKAT of MMP DNA 
 ## sequence variance and amphid dye-filling when variants were assigned biologically 
@@ -118,7 +118,7 @@ data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_resul
 
 ## Calculate effect size
 data/MMPfiltered.gvsp data/phasmid_dyf/MMPfiltered.effectsize: bin/calculate_effect_size.R data/phenotype_phasmid_dyf_dichotomous.csv data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf
-	Rscript bin/calculate_effect_size.R data/phenotype_phasmid_dyf_dichotomous.csv data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf data/phasmid_dyf/MMPfiltered.gvsp data/phasmid_dyf/MMPfiltered.effectsize
+	Rscript bin/calculate_effect_size.R data/phenotype_phasmid_dyf_dichotomous.csv data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf data/gene_publicName_N_sequenceName.txt data/phasmid_dyf/MMPfiltered.gvsp data/phasmid_dyf/MMPfiltered.effectsize
 
 ## Create Table S4 (Genome-wide association results from the SKAT of MMP DNA 
 ## sequence variance and phasmid dye-filling when variants were assigned biologically 

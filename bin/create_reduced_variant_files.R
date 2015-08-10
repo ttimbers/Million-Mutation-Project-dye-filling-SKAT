@@ -5,7 +5,7 @@
 
 #vcf_file <- "data/MMPcoding.vcf"
 #SSID_file <- "data/MMPcoding.SSID"
-#min_num_variants <- 4
+#min_num_variants <- 7
 #vcf_output_file <- "data/MMPfiltered.vcf"
 #SSID_output_file <- "data/MMPfiltered.SSID"
 

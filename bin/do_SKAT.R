@@ -1,3 +1,12 @@
+## Tiffany Timbers, 2015
+## Script to run SKAT analysis 
+
+#path_to_fam_file <- "data/amphid_dyf/MMPfiltered.fam"
+#path_to_phenotype.filename <- "data/phenotype_amphid_dyf_dichotomous.csv"
+#path_to_plink_files <- "data/amphid_dyf"
+#SSID_file <- "data/MMPfiltered.SSID"
+#weights.file <- "data/MMP_SNP_WeightFile.txt"
+
 main <- function() {
 	args <- commandArgs(trailingOnly = TRUE)
 	path_to_fam_file <- args[1]
@@ -33,6 +42,7 @@ main <- function() {
 		
 	## create null model based on phenotypes
 	Null_Model <- SKAT_Null_Model(fam_phenotypes_vector ~ 1, out_type="D")
+	#Null_Model <- SKAT_Null_Model(fam_phenotypes_vector ~ 1, out_type="D", n.Resampling=1000)
 
 	## perform SKAT on all sets of variants (no weights)
 	All_SKAT_Data.no.weights  <- SKAT.SSD.All(SSD.info, Null_Model)
@@ -48,6 +58,9 @@ main <- function() {
 
 	## perform SKAT on all sets of variants with weights
 	All_SKAT_Data  <- SKAT.SSD.All(SSD.info, Null_Model, obj.SNPWeight=SNPweights)
+	#All_SKAT_Data  <- SKATBinary.SSD.All(SSD.info, Null_Model, obj.SNPWeight=SNPweights, N.Resampling = 2 *10^6)
+	#test <- Resampling_FWER_1(All_SKAT_Data$results$P.value, All_SKAT_Data$P.value.Resampling, FWER=0.05)
+	#test2 <- Resampling_FWER(All_SKAT_Data, FWER=1)
 		
 	## sort All_SKAT_Data by p-value
 	mydata.SKAT.weights <- All_SKAT_Data$results
@@ -56,6 +69,10 @@ main <- function() {
 
 	## do False Discovery Rate analysis for SKAT with weights
 	pq_weights <- fdr_adjust(p.values.weights)
+	
+	#fdr.bh <- p.adjust(p.values.weights$P.value, method = "BH", n = length(p.values.weights$P.value))
+	#pq_weights$Q.value  <- fdr.bh
+	
 	write.table(pq_weights, paste(path_to_plink_files, "/SKAT_pANDq_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 	
 	##navigate to parent directory (i.e. out of phenotype directory
