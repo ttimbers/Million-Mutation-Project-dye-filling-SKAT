@@ -19,11 +19,11 @@ main <- function(){
   haplotype <- as.matrix(read.table(haplotype_file, header=FALSE))
   SNPlocation <- read.table(SNPlocation_file, header=FALSE)
   
-  data("SKAT.haplotypes")
-  haplotype_test <- SKAT.haplotypes$Haplotype[1:1000,]
-  SNPlocation_test <- SKAT.haplotypes$SNPInfo[,3]
+  #data("SKAT.haplotypes")
+  #haplotype_test <- SKAT.haplotypes$Haplotype[1:1000,]
+  #SNPlocation_test <- SKAT.haplotypes$SNPInfo[,3]
   
-  haplotype <- haplotype[1:2000,]
+  #haplotype <- haplotype[1:2000,]
   
   
   ## Calculate the average power of randomly selected 1,956 bp regions

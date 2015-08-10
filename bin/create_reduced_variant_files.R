@@ -3,6 +3,12 @@
 ##
 ## Takes a vcf file, a SNP set ID file and the minimum number of variants you want to do SKAT for to create a vcf file and a a SNP set ID file with only those variants.
 
+#vcf_file <- "data/MMPcoding.vcf"
+#SSID_file <- "data/MMPcoding.SSID"
+#min_num_variants <- 4
+#vcf_output_file <- "data/MMPfiltered.vcf"
+#SSID_output_file <- "data/MMPfiltered.SSID"
+
 main <- function() {
   ## command line arguements
   args <- commandArgs(trailingOnly = TRUE)

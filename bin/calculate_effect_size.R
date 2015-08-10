@@ -13,12 +13,12 @@
 
 ## use below when run inside RStudio:
 #setwd("Documents/Post-Doc/Manuscripts/MMP_dyf_screen/code/Million-Mutation-Project-dye-filling-SKAT/")
-#path_to_phenotypes <- "data/phenotype_amphid_dyf_dichotomous.csv"
-#path_to_SKAT_analysis <- "data/amphid_dyf/SKAT_version1_0_9_results/SKAT_pANDq_no_weights_results.txt"
+#path_to_phenotypes <- "data/phenotype_phasmid_dyf_dichotomous.csv"
+#path_to_SKAT_analysis <- "data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt"
 #path_to_SSID <- "data/MMPfiltered.SSID"
 #path_to_vcf <- "data/MMPfiltered.vcf"
-#output_gvsp_file <- "data/MMPfiltered.gvsp"
-#output_effect_size_file <- "data/amphid_dyf/MMPfiltered.effectsize"
+#output_gvsp_file <- "data/phasmid_dyf/MMPfiltered.gvsp"
+#output_effect_size_file <- "data/phasmid_dyf/MMPfiltered.effectsize"
 
 main <- function(){
   args <- commandArgs(trailingOnly = TRUE)
@@ -30,8 +30,9 @@ main <- function(){
   output_effect_size_file <- args[6]
   
   require(pwr)
-  require(dplyr)
   require(plyr)
+  require(dplyr)
+  
   
   ## Read in phenotype file
   phenotypes <- read.csv(path_to_phenotypes, header = TRUE, sep = "\t")
@@ -72,7 +73,6 @@ main <- function(){
   ## Add phenotypes to data frame
   ps <- phenotypes[,1:2]
   gvsp <- left_join(gvsp, phenotypes[,1:2])
-  gvsp <- gvsp[c("gene", "variant", "strain")]
   
   ## save gvsp file
   write.table(gvsp, output_gvsp_file, row.names = FALSE, quote = FALSE, append = FALSE)
@@ -96,14 +96,6 @@ main <- function(){
   newdata <- effect_size[order(effect_size$odds_ratio),]
   
   write.table(effect_size, output_effect_size_file, row.names = FALSE, quote = FALSE, append = FALSE)
-  
-  ## Make a list of genes (& their number of vars) that are significantly associated 
-  ## with the phenotype
-  sig_genes <- SKAT_results$SetID[which(SKAT_results$Q.value < 0.3)]
-  
-  ## subset sig genes from SSID to get table with gene & variants
-  effect_size_sig <- effect_size[effect_size$gene %in% sig_genes,] 
-  mean_effect_size <- mean(effect_size_sig$odds_ratio)
 }
 
 ## Function to find matching values in a data frame and then return row and column names 
