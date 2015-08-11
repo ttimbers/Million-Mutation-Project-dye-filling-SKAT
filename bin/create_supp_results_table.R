@@ -35,6 +35,9 @@ main <- function(){
   ## join SKAT_results and effectsize
   joined_data <- left_join(SKAT_results, effectsize, by = "sequence")
   
+  ## order columns
+  joined_data <- joined_data[c("public_gene_name", "sequence", "p-value", "q-value", "effects_size", "number_of_strains_with_mutations", "number_of_strains_with_dyf_phenotype", "number_of_strains_with_wild-type_phenotype")]
+  
   ## write out table
   write.table(joined_data, outout_table_name, row.names = FALSE, quote = FALSE, append = FALSE)
 }
