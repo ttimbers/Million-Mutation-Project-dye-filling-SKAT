@@ -10,8 +10,10 @@ main <- function(){
   args <- commandArgs(trailingOnly = TRUE)
   input_file <- args[1]
   what_was_measured <- args[2]
-  figure_out <- args[3]
-  stats_table_out <- args[4]
+  lower_ylimit <- args[3]
+  upper_ylimit <- args[4]
+  figure_out <- args[5]
+  stats_table_out <- args[6]
   
   ## load libraries
   require(ggplot2)
@@ -61,12 +63,12 @@ main <- function(){
           axis.text.y=element_text(colour="black", size = 12), ## change the y-axis values font to black and make larger
           axis.title.x = element_text(size = 12, vjust = -0.2), ## change the x-axis label font to black, make larger, and move away from axis
           axis.title.y = element_text(size = 12, vjust = 1.3)) +  ## change the y-axis label font to black, make larger, and move away from axis
-    ##ggtitle("Violin Plot of Worm Area") +            ## set title
+    #ylim(c(lower_ylimit, upper_ylimit)) +
     labs(x="Genotype", y=paste(what_was_measured," length (um)", sep="")) +     ## label the x and y axes 
     geom_jitter(alpha = 0.7, position = position_jitter(width = 0.1), size = 2, colour="gray50")  ## overlay jitter plot
     
   #save plot
-  ggsave(g, filename = figure_out, width = 4, height = 4)
+  ggsave(g, filename = figure_out, width = 1.75, height = 2.5)
   
   
 }

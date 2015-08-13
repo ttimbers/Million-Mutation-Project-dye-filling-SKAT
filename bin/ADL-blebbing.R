@@ -1,10 +1,10 @@
 ## Tiffany Timbers
 ## 2015-07-28
-## Analysis of Potential guidance defects in bgnt-1 mutants
+## Analysis of Potential dendrite blebbing in bgnt-1 mutants
 
 main <- function(){
   
-  ## input_file <- "data/ADL_guidance.csv"
+  ## input_file <- "data/axon_blebbing_combinedData.csv"
   
   ## Grab command line arguements
   args <- commandArgs(trailingOnly = TRUE)
@@ -28,19 +28,11 @@ main <- function(){
   unique(all_data$strain)
   all_data$strain <- sub("MX1924 ", "MX1924", all_data$strain)
   
-  ## make data frame just for data concerning > 1 double rod cilia
-  mult_double_rod <- all_data[,1:6]
-  mult_double_rod <- cbind(mult_double_rod, all_data[,8:11])
 
-  ## remove NaNs
-  mult_double_rod <- mult_double_rod[complete.cases(mult_double_rod), ]
-  
   ## make data frame and column naming scheme more general
   col_to_agg_over <- c("strain")
-  names(mult_double_rod)[names(mult_double_rod) == 'multiple_double_rod_cilia_on_one_side'] <- 'col_to_count'
-  x <- mult_double_rod
-  
-  
+  names(all_data)[names(all_data) == 'axon_blebbing_present'] <- 'col_to_count'
+  x <- all_data
   
   ## Take data frame and aggregate over a list of the columns (e.g. strain, and time) and 
   ## returns a new data frame that can be used to plot probability with ggplot.
@@ -61,7 +53,6 @@ main <- function(){
   x_aggregate$conf_int_upper <- conf_int$upper
   
   
-  
   ## make an object called my_plot which contains the plotting commands
   my_plot <- ggplot(x_aggregate, aes(strain, prob)) + ## plot probability for each strain
   geom_bar(aes(group=strain)) + ## make a line connecting all the points in the plot
@@ -69,7 +60,7 @@ main <- function(){
   geom_errorbar(aes(ymin=conf_int_lower, ymax=conf_int_upper), ## add 95% confidence intervals
                 width=.1) + ## make the confidence interval 0.1 width
   ##ggtitle('Habituation') + ## add a title to the plot
-  labs(x="Genotype", y="Proportion with > 1 \n double rod cilia/amphid") + ## label the x and y axes
+  labs(x="Genotype", y="Proportion with ADL dendrite blebbing") + ## label the x and y axes
   theme(plot.title = element_text(size = 16, vjust=2), ## Make the plot title larger and higher
         legend.title=element_blank(), ## remove the legend label
         legend.key=element_rect(fill='white'), ## remove the blocks around the legend items
@@ -84,7 +75,7 @@ main <- function(){
   ## call the object to plot the figure
   my_plot
   
-  ggsave(my_plot, filename = figure_out, width = 2.05, height = 2.5)
+  ggsave(my_plot, filename = figure_out, width = 4, height = 4)
   
   
   
@@ -101,30 +92,6 @@ main <- function(){
   write.table(stat_results_table, stats_table_out, row.names = FALSE, append = FALSE, quote = FALSE)
 }
 
-## Takes in a data frame, a list of the columns to aggregate over (e.g. strain, and time) and a list 
-## of columns to count (and get probability for). This returns a new data frame that can be used  
-## to plot probability with ggplot. 
-## 
-## New data frame contains columns: counts, N, prob, conf_int_lower and conf_int_upper. Confidnce 
-## intervals are exact binomial confidence intervals (Pearson-Clopper method)
-##
-## Dependencies: plyr and binom
-create_prob_table_to_plot <- function(x, col_to_agg_over, col_to_count){
-  ## For each strain, sum the col_to_count(s) and the sample size of that/those column(s)
-  x_aggregate <- ddply(x, as.character(col_to_agg_over), summarise, counts = sum(col_to_count), N = length(col_to_count))
-  
-  ## Calculate the probability for the col_to_count(s)
-  x_aggregate <- ddply(x_aggregate, as.character(col_to_agg_over), transform, prob= (counts / N))
-  
-  ## Calculate the 95% binomial confidence intervals for the probabilities (Clopper-Pearson method)
-  conf_int <- binom.confint(x_aggregate$counts, x_aggregate$N, methods = "exact")
-  
-  ## Add these confidence intervals to the data frame
-  x_aggregate$conf_int_lower <- conf_int$lower
-  x_aggregate$conf_int_upper <- conf_int$upper
-  
-  return(x_aggregate)
-}
 
 main()
   
