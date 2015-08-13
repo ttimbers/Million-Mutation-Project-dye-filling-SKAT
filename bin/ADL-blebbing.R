@@ -60,7 +60,7 @@ main <- function(){
   geom_errorbar(aes(ymin=conf_int_lower, ymax=conf_int_upper), ## add 95% confidence intervals
                 width=.1) + ## make the confidence interval 0.1 width
   ##ggtitle('Habituation') + ## add a title to the plot
-  labs(x="Genotype", y="Proportion with ADL dendrite blebbing") + ## label the x and y axes
+  labs(x="Genotype", y="Proportion with ADL \n dendrite blebbing") + ## label the x and y axes
   theme(plot.title = element_text(size = 16, vjust=2), ## Make the plot title larger and higher
         legend.title=element_blank(), ## remove the legend label
         legend.key=element_rect(fill='white'), ## remove the blocks around the legend items
@@ -75,7 +75,7 @@ main <- function(){
   ## call the object to plot the figure
   my_plot
   
-  ggsave(my_plot, filename = figure_out, width = 4, height = 4)
+  ggsave(my_plot, filename = figure_out, width = 2.05, height = 2.5)
   
   
   
