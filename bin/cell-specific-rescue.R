@@ -5,6 +5,8 @@
 main <- function(){
   
   ## input_file <- "data/cell-specific-rescue-amphid.csv"
+  ## figure_out <- "data/cell-specific-rescue-amphid_2.pdf"
+  ##stats_table_out <- "data/cell-specific-rescue-amphid_2.stats"
   ## input_file <- "data/cell-specific-rescue-phasmid.csv"
   
   ## Grab command line arguements
@@ -52,8 +54,8 @@ main <- function(){
   
   ## reorder levels of strain factor
   print(levels(x_aggregate$strain))
-  x_aggregate$strain = factor(x_aggregate$strain,levels(x_aggregate$strain)[c(7, 6, 3, 4, 2, 1, 5)])
-  
+  #x_aggregate$strain = factor(x_aggregate$strain,levels(x_aggregate$strain)[c(7, 6, 3, 4, 2, 1, 5)])
+  x_aggregate$strain = factor(x_aggregate$strain,levels(x_aggregate$strain)[c(10, 9, 4, 5, 7, 8, 1, 2, 6, 3)])
   
   
   ## make an object called my_plot which contains the plotting commands
@@ -78,10 +80,11 @@ main <- function(){
   ## call the object to plot the figure
   my_plot
   
-  ggsave(my_plot, filename = figure_out, width = 4, height = 4)
+  ggsave(my_plot, filename = figure_out, width = 6, height = 3.5, useDingbats=FALSE)
   
   ## make a dataframe containing the control strain phenotype count and N
   control.data  <- x_aggregate[x_aggregate$strain=="N2",]
+  control.data  <- control.data[complete.cases(control.data),]
   
   ## make wild-type/control contingency table
   defective <- control.data$counts

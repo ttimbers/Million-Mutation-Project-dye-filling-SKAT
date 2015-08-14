@@ -4,7 +4,7 @@
 
 main <- function(){
   
-  ## input_file <- "data/ADL_cilia_length_205-07-31.csv"
+  ## input_file <- "data/ADL_cilia_length_unblind_2015-07-31.csv"
   
   ## Grab command line arguements
   args <- commandArgs(trailingOnly = TRUE)
@@ -37,6 +37,8 @@ main <- function(){
   stats_results$Rpackage <- "base"
   stats_results$strain <- c("MX1924", "MX2236")
   
+  fit <- lm(length~strain, data=all_data)
+  tidy(anova(fit))
   
   ## test for difference using wilcox.test
   wilcox <- tidy(wilcox.test(all_data$length[which(all_data$strain == "MX1924")], all_data$length[which(all_data$strain == "MX2236")]))[1:2]
