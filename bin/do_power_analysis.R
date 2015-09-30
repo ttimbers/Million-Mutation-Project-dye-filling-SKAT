@@ -44,9 +44,9 @@ main <- function(){
   
   out.b <- Power_Logistic(Haplotypes = haplotype, SNP.Location = SNPlocation, SubRegion.Length = 1956, Prevalence = 0.08, Case.Prop=0.08, Causal.Percent = 40, Causal.MAF.Cutoff = 0.05, alpha = 0.002, Weight.Param = c(1,25), N.Sim = 100, OR.Type = "Log", MaxOR = 13, Negative.Percent = 0)
   
-  out.b<-Power_Logistic(Haplotypes = haplotype, SNP.Location = SNPlocation, SubRegion.Length=1956, Case.Prop=0.08, Causal.Percent= 40, N.Sim=100, Causal.MAF.Cutoff = 0.05, MaxOR=13,Negative.Percent=0)
+  out.b<-Power_Logistic(Haplotypes = haplotype, SNP.Location = SNPlocation, SubRegion.Length=1956, Prevalence = 0.08, Case.Prop=0.08, Causal.Percent= 40, N.Sim=100, Causal.MAF.Cutoff = 0.05, MaxOR=13,Negative.Percent=0)
   
-  Get_RequiredSampleSize(out.b, Power=0.5)
+  Get_RequiredSampleSize(out.b, Power=0.8)
 }
 
 main()

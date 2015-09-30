@@ -31,7 +31,7 @@ custom_weights <- function(vcf.filename, weight.KO, weight.inframe.indel, weight
   ## grep indels and snv's into two separate groups and create text files with this data
   system(paste("grep -h 'INDEL' ", vcf.filename, " > ", vcf_beginning, ".indels", sep=""))
   system(paste("grep -h 'CODING=' ", vcf.filename, " > ", vcf_beginning, ".coding", sep=""))
-  system(paste("grep -v 'INDEL' ", vcf.filename, " > ", vcf_beginning, ".snvs", sep=""))
+  system(paste("grep -v 'INDEL' ", vcf.filename, " > ", vcf_beginning, ".snvs", sep="")) #GF=coding_exon
 
   ## import text files created above
   variants.indels <- read.table(paste(vcf_beginning, ".indels", sep=""))

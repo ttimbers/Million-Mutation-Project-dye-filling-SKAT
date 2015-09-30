@@ -45,7 +45,7 @@ main <- function() {
 	#Null_Model <- SKAT_Null_Model(fam_phenotypes_vector ~ 1, out_type="D", n.Resampling=1000)
 
 	## perform SKAT on all sets of variants (no weights)
-	All_SKAT_Data.no.weights  <- SKAT.SSD.All(SSD.info, Null_Model)
+	All_SKAT_Data.no.weights  <- SKAT.SSD.All(SSD.info, weights.beta=c(1,1), Null_Model)
 		
 	## sort All_SKAT_Data.no.weights by p-value
 	mydata.SKAT.no.weights <- All_SKAT_Data.no.weights$results
@@ -58,10 +58,7 @@ main <- function() {
 
 	## perform SKAT on all sets of variants with weights
 	All_SKAT_Data  <- SKAT.SSD.All(SSD.info, Null_Model, obj.SNPWeight=SNPweights)
-	#All_SKAT_Data  <- SKATBinary.SSD.All(SSD.info, Null_Model, obj.SNPWeight=SNPweights, N.Resampling = 2 *10^6)
-	#test <- Resampling_FWER_1(All_SKAT_Data$results$P.value, All_SKAT_Data$P.value.Resampling, FWER=0.05)
-	#test2 <- Resampling_FWER(All_SKAT_Data, FWER=1)
-		
+	
 	## sort All_SKAT_Data by p-value
 	mydata.SKAT.weights <- All_SKAT_Data$results
 	p.values.weights <- mydata.SKAT.weights[order(mydata.SKAT.weights[,2]),]
@@ -69,9 +66,6 @@ main <- function() {
 
 	## do False Discovery Rate analysis for SKAT with weights
 	pq_weights <- fdr_adjust(p.values.weights)
-	
-	#fdr.bh <- p.adjust(p.values.weights$P.value, method = "BH", n = length(p.values.weights$P.value))
-	#pq_weights$Q.value  <- fdr.bh
 	
 	write.table(pq_weights, paste(path_to_plink_files, "/SKAT_pANDq_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 	
