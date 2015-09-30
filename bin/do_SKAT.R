@@ -41,10 +41,11 @@ main <- function() {
 	SSD.info <- Open_SSD(paste(path_to_plink_files, "/file.SSD", sep=""), paste(path_to_plink_files, "/file.info", sep=""))
 		
 	## create null model based on phenotypes
+	set.seed(100)
 	Null_Model <- SKAT_Null_Model(fam_phenotypes_vector ~ 1, out_type="D")
-	#Null_Model <- SKAT_Null_Model(fam_phenotypes_vector ~ 1, out_type="D", n.Resampling=1000)
 
 	## perform SKAT on all sets of variants (no weights)
+	set.seed(100)
 	All_SKAT_Data.no.weights  <- SKAT.SSD.All(SSD.info, weights.beta=c(1,1), Null_Model)
 		
 	## sort All_SKAT_Data.no.weights by p-value
@@ -57,6 +58,7 @@ main <- function() {
 	write.table(pq_wo_weights, paste(path_to_plink_files, "/SKAT_pANDq_no_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## perform SKAT on all sets of variants with weights
+	set.seed(100)
 	All_SKAT_Data  <- SKAT.SSD.All(SSD.info, Null_Model, obj.SNPWeight=SNPweights)
 	
 	## sort All_SKAT_Data by p-value
