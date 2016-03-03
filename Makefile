@@ -146,13 +146,13 @@ data/haplotype.matrix data/SNPlocation.file: bin/create_haplotype_matrix.R data/
 ## Note - these are not in make syntax yet...
 
 ## plot ADL cilia length in bgnt-1 and wild-type
-rscript bin/analyze_length.R data/ADL_cilia_length_unblind_2015-07-31.csv cilia data/cilia_length.pdf data/cilia_length.stats
+#rscript bin/analyze_length.R data/ADL_cilia_length_unblind_2015-07-31.csv cilia data/cilia_length.pdf data/cilia_length.stats
 
 ## plot distal tip of ADL cilia to distal end of socket cell length in bgnt-1 and wild-type
-rscript bin/analyze_length.R data/distal_end_of_ADL_cilia_to_distal_end_of_socket_unblind.csv cilia_socket_diss data/distal_end_of_ADL_cilia_to_distal_end_of_socket.pdf data/distal_end_of_ADL_cilia_to_distal_end_of_socket.stats
+#rscript bin/analyze_length.R data/distal_end_of_ADL_cilia_to_distal_end_of_socket_unblind.csv cilia_socket_diss data/distal_end_of_ADL_cilia_to_distal_end_of_socket.pdf data/distal_end_of_ADL_cilia_to_distal_end_of_socket.stats
 
 ## plot proportion of animals that have > 1 ADL cilia per amphid
-rscript bin/ADL-guidance.R data/ADL-guidance.csv data/ADL-guidance.pdf data/ADL-guidance.stats
+#rscript bin/ADL-guidance.R data/ADL-guidance.csv data/ADL-guidance.pdf data/ADL-guidance.stats
 
 ##======================================================================================
 ## Clean: files to delete if to reset to project start before analysis
