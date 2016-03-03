@@ -10,7 +10,7 @@
 
 
 ## Final files to be generated from SKAT analysis
-all: data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt
+all: data/Table_S3.csv data/Table_S4.csv data/Table_S5.csv data/Table_S6.csv
 
 ##======================================================================================
 ## Analysis of amphid dye-filling phenotype
