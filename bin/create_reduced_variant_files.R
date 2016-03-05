@@ -1,9 +1,15 @@
+## Create reduced variant (vcf and SSID) files
 ## Tiffany Timbers
 ## August 3, 2015
 ##
-## Takes a vcf file, a SNP set ID file and the minimum number of variants you want to do SKAT for to create a vcf file and a a SNP set ID file with only those variants.
+## Takes a vcf file, a SNP set ID file and the minimum number of variants you want to do 
+## SKAT for to create a vcf file and a a SNP set ID file with only those variants.
 
 main <- function() {
+
+  ## Start the clock!
+  ptm <- proc.time() 
+
   ## load libraries
   require(dplyr)
 
@@ -11,8 +17,7 @@ main <- function() {
   args <- commandArgs(trailingOnly = TRUE)
   vcf_file <- args[1]
   SSID_file <- args[2]
-  # command line arg is a string, so need to be converted to a number
-  min_num_variants <- as.numeric(args[3])
+  min_num_variants <- as.numeric(args[3]) # command line arg is a string, so need to be converted to a number
   vcf_output_file <- args[4]
   SSID_output_file <- args[5]
 
@@ -47,6 +52,10 @@ main <- function() {
   ## save .vcf file
   system(paste("grep -E '^#' ", vcf_file, " > ", vcf_output_file, sep=""))
   write.table(vcf_count_greater_or_equal_to_min, file = vcf_output_file, sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE, append = TRUE)
+  
+  ## output time to run script
+  the_time <- proc.time() - ptm # Stop the clock
+  print(paste("It took", the_time[3], "to run create_reduced_variant_files.R")) 
 }
 
 main()

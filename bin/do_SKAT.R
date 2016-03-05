@@ -1,22 +1,35 @@
 ## Tiffany Timbers, 2015
 ## Script to run SKAT analysis 
-
-#path_to_fam_file <- "data/amphid_dyf/MMPfiltered.fam"
-#path_to_phenotype.filename <- "data/phenotype_amphid_dyf_dichotomous.csv"
-#path_to_plink_files <- "data/amphid_dyf"
-#SSID_file <- "data/MMPfiltered.SSID"
-#weights.file <- "data/MMP_SNP_WeightFile.txt"
+##
+## Inputs:
+##	1. path to PLINK fam file
+## 	2. path to phenotype file (two column file where first column is strain and second column is phenotype)
+## 	3. path to PLINK files
+## 	4. path to SSID file
+##	5. path to weights file
+##
+## Outputs: 
+##	1. SKAT results file for analysis with no weights
+##	2. SKAT results file with FDR q values for analysis with no weights
+##	3. SKAT results file for analysis with weights
+## 	4. SKAT results file with FDR q values for analysis with weights
 
 main <- function() {
+
+	## Start the clock!
+  	ptm <- proc.time()
+
+	## load libraries	
+	require(SKAT)
+	require(fdrtool)
+
+	## assign command line arguements
 	args <- commandArgs(trailingOnly = TRUE)
 	path_to_fam_file <- args[1]
 	path_to_phenotype.filename <- args[2]
 	path_to_plink_files <- args[3]
-  SSID_file <- args[4]
+  	SSID_file <- args[4]
 	weights.file <- args[5]
-	
-	require(SKAT)
-	require(fdrtool)
 	
 	## write phenotype to the fam file
 	write_to_fam(path_to_fam_file, path_to_phenotype.filename)	
@@ -73,6 +86,10 @@ main <- function() {
 	
 	##navigate to parent directory (i.e. out of phenotype directory
 	system("cd ..")
+	
+	## output time to run script
+  	the_time <- proc.time() - ptm # Stop the clock
+  	print(paste("It took", the_time[3], "to run doSKAT.R")) 
 }
 
 ## Adds dichotomous phenotype data to plink fam file

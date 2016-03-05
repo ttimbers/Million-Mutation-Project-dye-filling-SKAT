@@ -1,8 +1,26 @@
 ## Make weights file for SKAT
+## Tiffany Timbers
+## August 3, 2015
+##
+## Inputs:
+##	1. .vcf file
+## 	2. Weight to assign knockout mutations
+## 	3. Weight to assign inframe deletion mutations
+## 	4. Weight to assign missense mutations 
+##	5. Path and filename of output file
+##
+## Outputs: a tab delimited text file of two columns. The first column is the variants
+## and the second column is the weight assigned to the variant. 
 
 main <- function() {
+	
+	## Start the clock!
+  	ptm <- proc.time() 
+	
+	## load libraries
 	require(stringr)
 
+	## assign command line arguements
 	args <- commandArgs(trailingOnly = TRUE)
 	vcf.file <- args[1]
 	weight.KO <- args[2]
@@ -13,6 +31,10 @@ main <- function() {
 	
 	variant.weights <- custom_weights(vcf.file, weight.KO, weight.inframe, weight.missense)
 	write.table(variant.weights, weights.file, sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE, append=FALSE)
+	
+	## output time to run script
+  	the_time <- proc.time() - ptm # Stop the clock
+  	print(paste("It took", the_time[3], "to run Make_custom_variant_weights.R")) 
 }
 
 custom_weights <- function(vcf.filename, weight.KO, weight.inframe.indel, weight.missense) {

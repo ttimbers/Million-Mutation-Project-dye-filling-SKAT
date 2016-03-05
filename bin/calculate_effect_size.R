@@ -11,17 +11,20 @@
 ## grep -v "#" data/filteredMMP_oneline_header.vcf >> data/MMP_oneline_header.vcf
 ## rm data/filteredMMP_oneline_header.vcf
 
-## use below when run inside RStudio:
-#setwd("Documents/Post-Doc/Manuscripts/MMP_dyf_screen/code/Million-Mutation-Project-dye-filling-SKAT/")
-#path_to_phenotypes <- "data/phenotype_amphid_dyf_dichotomous.csv"
-#path_to_SKAT_analysis <- "data/amphid_dyf/SKAT_pANDq_no_weights_results.txt"
-#path_to_SSID <- "data/MMPfiltered.SSID"
-#path_to_vcf <- "data/MMPfiltered.vcf"
-#path_to_gene_publicName_N_sequenceName <- "data/gene_publicName_N_sequenceName.txt"
-#output_gvsp_file <- "data/amphid_dyf/MMPfiltered.gvsp"
-#output_effect_size_file <- "data/amphid_dyf/MMPfiltered.effectsize"
-
 main <- function(){
+
+  ## Start the clock!
+  ptm <- proc.time()
+
+  ## load libraries
+  require(pwr)
+  require(plyr)
+  require(dplyr)
+  
+  ## set options
+  options(stringsAsFactors = FALSE)
+
+  ## assign command line arguements
   args <- commandArgs(trailingOnly = TRUE)
   path_to_phenotypes <- args[1]
   path_to_SKAT_analysis <- args[2]
@@ -30,12 +33,6 @@ main <- function(){
   path_to_gene_publicName_N_sequenceName <- args[5]
   output_gvsp_file <- args[6]
   output_effect_size_file <- args[7]
-  
-  require(pwr)
-  require(plyr)
-  require(dplyr)
-  
-  options(stringsAsFactors = FALSE)
   
   ## Read in phenotype file
   phenotypes <- read.csv(path_to_phenotypes, header = TRUE, sep = "\t")
@@ -106,6 +103,10 @@ main <- function(){
   effect_size$odds_ratio <- effect_size$odds_minor / effect_size$odds_major 
   
   write.table(effect_size, output_effect_size_file, row.names = FALSE, quote = FALSE, append = FALSE)
+  
+  ## output time to run script
+  the_time <- proc.time() - ptm # Stop the clock
+  print(paste("It took", the_time[3], "to run calculate_effect_size.R"))
 }
 
 ## Function to find matching values in a data frame and then return row and column names 

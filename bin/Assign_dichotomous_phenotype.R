@@ -3,6 +3,11 @@
 ## from wild-type. 
 
 main <- function(){
+	
+	## Start the clock!
+	ptm <- proc.time() 
+	
+	## assign command line arguments
 	args <- commandArgs(trailingOnly = TRUE)
 	input_file_path <- args[1]
 	output_file_path <- args[2]
@@ -15,6 +20,10 @@ main <- function(){
 	
 	## save this data to a file to be used for SKAT analysis
 	write.table(phenotypes.dichtomous, output_file_path, sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
+	
+	## output time to run script
+	the_time <- proc.time() - ptm # Stop the clock
+  	print(paste("It took", the_time[3], "to run Assign_dichotomous_phenotype.R"))
 }
 
 ## Takes count data for a phenotype for a list of strains and uses a Fisher's exact test

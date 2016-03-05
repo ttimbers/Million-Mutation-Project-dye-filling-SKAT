@@ -7,14 +7,18 @@
 ## that gene, number of non-dyf strains with mutations in that gene, and the effect size of that gene.
 
 main <- function(){
+
+  ## Start the clock!
+  ptm <- proc.time()
+
+  ## load libraries
+  require(dplyr)
+
   ## Get command line arguments
   args <- commandArgs(trailingOnly = TRUE)
   SKAT_results_file <- args[1] 
   effectsize_file <- args[2] 
   outout_table_name <- args[3] 
-  
-  ## load libraries
-  require(dplyr)
   
   ## load data files
   SKAT_results <- read.table(SKAT_results_file, header = TRUE)
@@ -40,6 +44,10 @@ main <- function(){
   
   ## write out table
   write.table(joined_data, outout_table_name, row.names = FALSE, quote = FALSE, append = FALSE)
+  
+  ## output time to run script
+  the_time <- proc.time() - ptm # Stop the clock
+  print(paste("It took", the_time[3], "to run create_supp_table.R"))
 }
 
 main()
