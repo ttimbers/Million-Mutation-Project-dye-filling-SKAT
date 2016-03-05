@@ -159,6 +159,7 @@ clean:
 	-rm -f data/MMP_SNP_WeightFile.txt
 	-rm -f data/amphid_dyf data/amphid_dyf/MMPfiltered.fam data/amphid_dyf/MMPfiltered.bim data/amphid_dyf/MMPfiltered.bed data/amphid_dyf/MMPfiltered.log
 	-rm -f data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt
+	-rm -f data/amphid_dyf/file* data/MMPfiltered*
 	-rm -f data/amphid_dyf/MMPfiltered.gvsp data/amphid_dyf/MMPfiltered.effectsize
 	-rm -f data/Table_S3.csv
 	-rm -f data/Table_S5.csv
@@ -168,6 +169,7 @@ clean:
 	-rm -f data/phenotype_phasmid_dyf_dichotomous.csv
 	-rm -f data/phasmid_dyf/MMPfiltered.fam data/phasmid_dyf/MMPfiltered.bim data/phasmid_dyf/MMPfiltered.bed data/phasmid_dyf/MMPfiltered.log
 	-rm -f data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt
+	-rm -f data/phasmid_dyf/file* Rplots.pdf
 	-rm -f data/phasmid_dyf/MMPfiltered.gvsp data/phasmid_dyf/MMPfiltered.effectsize
 	-rm -f data/Table_S4.csv
 	-rm -f data/Table_S6.csv
