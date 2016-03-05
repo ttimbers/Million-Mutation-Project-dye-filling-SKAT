@@ -102,7 +102,7 @@ data/phenotype_phasmid_dyf_dichotomous.csv: bin/Assign_dichotomous_phenotype.R d
 
 ## Create binary plink files for phasmid phenotype from filtered .vcf file
 data/phasmid_dyf data/phasmid_dyf/MMPfiltered.fam data/phasmid_dyf/MMPfiltered.bim data/phasmid_dyf/MMPfiltered.bed data/phasmid_dyf/MMPfiltered.log: data/MMPfiltered.vcf
-	if [ ! -d "data/amphid_dyf/" ]; then mkdir data/phasmid_dyf; fi;
+	if [ ! -d "data/phasmid_dyf/" ]; then mkdir data/phasmid_dyf; fi;
 	plink --vcf data/MMPfiltered.vcf --allow-extra-chr --out data/phasmid_dyf/MMPfiltered
 
 ## Perform SKAT analysis (use SSID file made above)
