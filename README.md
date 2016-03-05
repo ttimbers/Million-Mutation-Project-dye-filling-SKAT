@@ -9,16 +9,16 @@ be made public upon publication of the manuscript.
 
 ## Dependencies
 
-* Bash Shell
-* Make
-* Perl
-* Plink v1.90b1g
-* R version 3.2.3
+* Bash Shell (version 3.2.57(1))
+* Make (version 3.81)
+* Perl (v5.18.2)
+* Plink (v1.90b1g)
+* R (version 3.2.3)
 * R packages: 
 	1. dplyr (version 0.4.3)
 	2. fdrtool (version 1.2.15)
 	3. plyr (version 1.8.3) 
-	4. pwr (1.1-3)
+	4. pwr (version 1.1-3)
 	5. SKAT (version 1.0.9) 
 	6. stringr (version 1.0.0)  
 
