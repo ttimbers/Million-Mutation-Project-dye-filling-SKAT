@@ -64,12 +64,12 @@ data/amphid_dyf data/amphid_dyf/MMPfiltered.fam data/amphid_dyf/MMPfiltered.bim 
 	plink --vcf data/MMPfiltered.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out data/amphid_dyf/MMPfiltered
 
 ## Perform SKAT analysis
-data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID
+data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_dichotomous.csv
 	Rscript bin/do_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
 
 ## Calculate effect size
 data/amphid_dyf/MMPfiltered.gvsp data/amphid_dyf/MMPfiltered.effectsize: bin/calculate_effect_size.R data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf
-	Rscript bin/calculate_effect_size.R data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf data/gene_publicName_N_sequenceName.txt data/amphid_dyf/amphid_dyf/MMPfiltered.gvsp data/amphid_dyf/MMPfiltered.effectsize
+	Rscript bin/calculate_effect_size.R data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf data/gene_publicName_N_sequenceName.txt data/amphid_dyf/MMPfiltered.gvsp data/amphid_dyf/MMPfiltered.effectsize
 
 ## Create Table S3 (Genome-wide association results from the SKAT of MMP DNA 
 ## sequence variance and amphid dye-filling when variants were assigned biologically 
@@ -102,11 +102,11 @@ data/phenotype_phasmid_dyf_dichotomous.csv: bin/Assign_dichotomous_phenotype.R d
 
 ## Create binary plink files for phasmid phenotype from filtered .vcf file
 data/phasmid_dyf data/phasmid_dyf/MMPfiltered.fam data/phasmid_dyf/MMPfiltered.bim data/phasmid_dyf/MMPfiltered.bed data/phasmid_dyf/MMPfiltered.log: data/MMPfiltered.vcf
-	if [ ! -d "data/amphid_dyf/" ]; then mkdir data/phasmid_dyf; fi
+	if [ ! -d "data/amphid_dyf/" ]; then mkdir data/phasmid_dyf; fi;
 	plink --vcf data/MMPfiltered.vcf --allow-extra-chr --out data/phasmid_dyf/MMPfiltered
 
 ## Perform SKAT analysis (use SSID file made above)
-data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/phasmid_dyf/filteredMMP.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_phasmid_dyf_dichotomous.csv
+data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_dichotomous.csv data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
 	Rscript bin/do_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_dichotomous.csv data/phasmid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt	
 
 ## Calculate effect size
