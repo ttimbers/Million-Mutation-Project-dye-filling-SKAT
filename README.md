@@ -31,6 +31,8 @@ there).
 export PATH="/path/to/where/you/installed/plink:$PATH"
 ~~~
 
+There is also a Docker image of all the software, scripts, and data for this analysis. I can be accessed here: https://hub.docker.com/r/ttimbers/mmp-dyf-skat/
+
 ## How to use it
 
 1. Clone this repository
