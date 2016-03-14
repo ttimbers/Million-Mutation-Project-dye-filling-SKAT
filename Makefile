@@ -37,7 +37,7 @@ data/list_VCstrains_vcf.txt: data/phenotype_amphid_dyf_dichotomous.csv
 ## called list_VCstrains_vcf.txt. Uses -protein argument creates a merged .vcf file with
 ## only variants which affect coding regions	
 data/MMPcoding.vcf: data/MMP.vcf.gz bin/filter_MMP_variants.pl data/list_VCstrains_vcf.txt	
-	gzcat data/MMP.vcf.gz | perl bin/filter_MMP_variants.pl -input - -output data/MMPcoding.vcf -strain data/list_VCstrains_vcf.txt -protein
+	gunzip -c data/MMP.vcf.gz | perl bin/filter_MMP_variants.pl -input - -output data/MMPcoding.vcf -strain data/list_VCstrains_vcf.txt -protein
 
 ## Create SSID file for SKAT analysis
 data/MMPcoding.SSID: bin/Make_SSID_file.R data/MMPcoding.vcf
