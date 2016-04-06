@@ -12,7 +12,7 @@ be made public upon publication of the manuscript.
 * Bash Shell (version 3.2.57(1))
 * Make (version 3.81)
 * Perl (v5.18.2)
-* Plink (v1.90b1g)
+* Plink (v1.90b3.36)
 * R (version 3.2.3)
 * R packages: 
 	1. dplyr (version 0.4.3)
@@ -31,7 +31,7 @@ there).
 export PATH="/path/to/where/you/installed/plink:$PATH"
 ~~~
 
-There is also a Docker image of all the software, scripts, and data for this analysis. I can be accessed here: https://hub.docker.com/r/ttimbers/mmp-dyf-skat/
+There is also a Docker image of the environment which the analysis was run in can be accessed here: https://hub.docker.com/r/ttimbers/mmp-dyf-skat/
 
 ## How to use it
 
