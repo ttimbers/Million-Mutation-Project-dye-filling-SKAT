@@ -50,7 +50,7 @@ main <- function(){
   vcf_df_no_header_name <- paste(path_to_vcf, ".no_header", sep="")
  
   ## make a rectangular version of the vcf file (withoug column 1)
-  system(paste("grep -E -v '^##' ", path_to_vcf, " | cut -d$'\t' -f 3,10- > ", vcf_df_no_header_name, sep = ''))
+  system(paste("grep -E -v '^##' ", path_to_vcf, " | cut -f 3,10- > ", vcf_df_no_header_name, sep = ''))
   
   vcf <- read.table(vcf_df_no_header_name, header=TRUE)
   
