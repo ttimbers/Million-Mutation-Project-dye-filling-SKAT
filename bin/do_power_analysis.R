@@ -2,51 +2,18 @@
 ## August 3, 2015
 ##
 ## Power analysis for SKAT on the C. elegans Million Mutation Project Strains.
-## Note - the median size of coding genes is 1,956 bp in C. elegans
 ## 
+## 
+## Approach - bootstap
+## 0. Make a compressed vcf with only strains & snps that I have used in my analysis
 ##
-## use below when run inside RStudio:
-## haplotype_file <- "data/haplotype.matrix"
-## SNPlocation_file <- "data/SNPlocation.file"
-main <- function(){
-  args <- commandArgs(trailingOnly = TRUE)
-  haplotype_file <- args[1]
-  SNPlocation_file <- args[2]
-  
-  library(SKAT)
-  
-  ## read in files
-  haplotype <- as.matrix(read.table(haplotype_file, header=FALSE))
-  SNPlocation <- read.table(SNPlocation_file, header=FALSE)
-  
-  #data("SKAT.haplotypes")
-  #haplotype_test <- SKAT.haplotypes$Haplotype[1:1000,]
-  #SNPlocation_test <- SKAT.haplotypes$SNPInfo[,3]
-  
-  #haplotype <- haplotype[1:2000,]
-  
-  
-  ## Calculate the average power of randomly selected 1,956 bp regions
-  ## with the following conditions.
-  ##
-  ## Subregion.Length = 1956
-  ## Prevalence = 0.08
-  ## Case.Prop = 0.08
-  ## Causal percent = 40
-  ## Causal.MAF.Cutoff = 0.05
-  ## alpha = 0.002
-  ## N.Sample.ALL = 480
-  ## Weight.Param = c(1,25)
-  ## N.Sim = 100
-  ## OR.Type = "Log"
-  ## MaxOR = 13
-  ## Negative percent = 0
-  
-  out.b <- Power_Logistic(Haplotypes = haplotype, SNP.Location = SNPlocation, SubRegion.Length = 1956, Prevalence = 0.08, Case.Prop=0.08, Causal.Percent = 40, Causal.MAF.Cutoff = 0.05, alpha = 0.002, Weight.Param = c(1,25), N.Sim = 100, OR.Type = "Log", MaxOR = 13, Negative.Percent = 0)
-  
-  out.b<-Power_Logistic(Haplotypes = haplotype, SNP.Location = SNPlocation, SubRegion.Length=1956, Prevalence = 0.08, Case.Prop=0.08, Causal.Percent= 40, N.Sim=100, Causal.MAF.Cutoff = 0.05, MaxOR=13,Negative.Percent=0)
-  
-  Get_RequiredSampleSize(out.b, Power=0.8)
-}
+## 1. randomly sample 50 worms strains from column 1 of data/phenotype_amphid_dyf.csv
+##		* R script: randomly sample (without replacement) from a list data/phenotype_amphid_dyf.csv, save as temp file (with unique ID?)
+##		* make temp vcf with these samples
+## 		* convert files with plink and add phenotypes
 
-main()
+## 2. do SKAT on amphid data, get p & q values, write those with q's < 0.3 to file naming it with time-date_stamp + sample N (here 100)
+## 3. do this 10000 times
+## 4. Report What proportion of the time do you get a significant q-value under 30%, under 20%, under 10%?
+## 5. Do this all again for 100, 200 & 300 samples
+
