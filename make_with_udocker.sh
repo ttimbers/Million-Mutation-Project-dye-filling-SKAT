@@ -11,6 +11,7 @@
 # udocker run --rm ttimbers/mmp-dyf-skat bash /home/ttimbers/projects/Million-Mutation-Project-dye-filling-SKAT/make_with_udocker.sh all /home/ttimbers/projects/Million-Mutation-Project-dye-filling-SKAT
 #
 # Example of how I ran it on my local machine to make all:
+# docker run --rm -v paths_to_local_volume:path_to_container_volume bash path_to_make_with_udocker.sh_on_container target container_directory_to_run_in
 # docker run --rm -v /Users/tiffanytimbers/Documents/Post-Doc/Manuscripts/MMP_dyf_screen/code/Million-Mutation-Project-dye-filling-SKAT:/home/Million-Mutation-Project-dye-filling-SKAT ttimbers/mmp-dyf-skat bash /home/Million-Mutation-Project-dye-filling-SKAT/make_with_udocker.sh all /home/Million-Mutation-Project-dye-filling-SKAT
 
 # export path to plink to $PATH

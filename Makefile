@@ -126,10 +126,13 @@ data/Table_S6.csv: bin/create_supp_results_table.R data/phasmid_dyf/SKAT_no_weig
 	Rscript bin/create_supp_results_table.R data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/MMPfiltered.effectsize data/Table_S6.csv
 
 ##======================================================================================
-## Power Analysis
+## Bootstrap Power Analysis
 ##======================================================================================
 
-# work in progress
+## make genotype matrix & phenotype file & load to memory (R) from data/MMPfiltered.vcf
+
+## R script: randomly sample (without replacement) from a list data/phenotype_amphid_dyf.csv, save as temp file (with unique ID?)
+
 
 ##======================================================================================
 ## Plot data for paper (characterization of bgnt-1)

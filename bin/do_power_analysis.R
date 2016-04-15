@@ -17,3 +17,11 @@
 ## 4. Report What proportion of the time do you get a significant q-value under 30%, under 20%, under 10%?
 ## 5. Do this all again for 100, 200 & 300 samples
 
+# or this approach
+
+# use seqminer to convert from vcf to genotype matrix
+
+library(seqminer)
+
+fileName <- system.file('data/test-sorted.gz.tbi', package = 'seqminer')
+cfh <- readVCFToMatrixByRange('data/test.vcf', 'I:100:9585570', 'Nonsynonymous')
