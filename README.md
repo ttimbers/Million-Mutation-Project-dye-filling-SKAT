@@ -4,9 +4,6 @@ Genomic data and code to accompany the SKAT analysis of Million Mutation Project
 dye-filling phenotypes reported in [Timbers *et al., bioRxiv*, 2015](http://dx.doi.org/10.1101/027540).
 Specifically, this is the code used to generate Supplementary Tables 3-6.
 
-All other data used for this project are stored in a private repository on Figshare, which will 
-be made public upon publication of the manuscript.
-
 ## Dependencies
 
 * Bash Shell (version 3.2.57(1))
