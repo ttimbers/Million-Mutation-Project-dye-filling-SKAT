@@ -140,7 +140,7 @@ data/Table_S6.csv: bin/create_supp_results_table.R data/phasmid_dyf/SKAT_no_weig
 
 ## Do this for N = 50, 100, 200, 300, 400
 
-## Make loop over these targets 1000 times
+## Make loop over these targets 1000 times for each sample size
 
 ## Create list of randomly sampled strains (without replacement) & phenotype data from data/phenotype_amphid_dyf_dichotomous.csv
 data/temp_phenotype_amphid_dyf_dichotomous.csv: bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv
@@ -151,17 +151,26 @@ data/temp_list_VCstrains_vcf.txt: data/temp_phenotype_amphid_dyf_dichotomous.csv
 	awk '{print $$1}' data/temp_phenotype_amphid_dyf_dichotomous.csv | grep -h "^VC*" > data/temp_list_VCstrains_vcf.txt
 
 ## Create a vcf file from these random selected strains, only variants from data/MMPfiltered.vcf
-data/temp_MMPfiltered.vcf: bin/filter_MMP_variants.pl data/MMPfiltered.vcf
+data/temp_MMPcoding.vcf: bin/filter_MMP_variants.pl data/MMPfiltered.vcf
 	gunzip -c data/MMP.vcf.gz | perl bin/filter_MMP_variants.pl -input - -output data/temp_MMPcoding.vcf -strain data/temp_list_VCstrains_vcf.txt -protein
 
+## Create SSID file for SKAT analysis
+#data/temp_MMPcoding.SSID: bin/Make_SSID_file.R data/temp_MMPcoding.vcf
+#	Rscript bin/Make_SSID_file.R data/temp_MMPcoding.vcf data/temp_MMPcoding.SSID
+
+## Create a filtered SSID file and vcf file for only variants from those genes which have
+## a specified minimum number of alleles (we chose 7)
+#data/MMPfiltered.vcf data/MMPfiltered.SSID: bin/create_reduced_variant_files.R data/MMPcoding.vcf data/MMPcoding.SSID
+#	Rscript bin/create_reduced_variant_files.R data/MMPcoding.vcf data/MMPcoding.SSID 7 data/MMPfiltered.vcf data/MMPfiltered.SSID
+
 ## Create binary plink files from the vcf file
-data/power data/power/temp_MMPfiltered.fam data/power/temp_MMPfiltered.bim data/power/temp_MMPfiltered.bed data/power/temp_MMPfiltered.log: data/temp_MMPfiltered.vcf
-	if [ ! -d "data/power/" ]; then mkdir data/power; fi
-	plink --vcf data/temp_MMPfiltered.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out data/power/temp_MMPfiltered
+#data/power data/power/temp_MMPfiltered.fam data/power/temp_MMPfiltered.bim data/power/temp_MMPfiltered.bed data/power/temp_MMPfiltered.log: data/temp_MMPfiltered.vcf
+#	if [ ! -d "data/power/" ]; then mkdir data/power; fi
+#	plink --vcf data/temp_MMPfiltered.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out data/power/temp_MMPfiltered
 
 ## Perform SKAT analysis
-#data/power/SKAT_pANDq_no_weights_results.csv: bin/do_SKAT_no_weights.R data/power/temp_MMPfiltered.fam data/MMPfiltered.SSID data/phenotype_amphid_dyf_dichotomous.csv
-#	Rscript bin/do_SKAT_no_weights.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
+#data/power/temp_SKAT_pANDq_no_weights_results.csv: bin/do_SKAT_no_weights.R data/power/temp_MMPfiltered.fam data/temp_MMPfiltered.SSID data/temp_phenotype_amphid_dyf_dichotomous.csv
+#	Rscript bin/do_SKAT_no_weights.R data/power/temp_MMPfiltered.fam data/temp_phenotype_amphid_dyf_dichotomous.csv data/power data/temp_MMPfiltered.SSID
 
 ##======================================================================================
 ## Plot data for paper (characterization of bgnt-1)
@@ -209,3 +218,7 @@ clean:
 	
 	# bootstrap power analysis related files
 	-rm -f data/temp_phenotype_amphid_dyf_dichotomous.csv
+	-rm -f data/temp_list_VCstrains_vcf.txt
+	-rm -f data/temp_MMPfiltered.vcf
+	-rm -f data/power data/power/temp_MMPfiltered.fam data/power/temp_MMPfiltered.bim data/power/temp_MMPfiltered.bed data/power/temp_MMPfiltered.log
+	-rm -f data/power/temp_SKAT_pANDq_no_weights_results.csv

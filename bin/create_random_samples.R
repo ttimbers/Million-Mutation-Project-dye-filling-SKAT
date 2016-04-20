@@ -43,8 +43,11 @@ main <- function() {
 	print(head(sampled_df))
 	
 	# write sampled data frame to file
-	write.table(sampled_df, file = output_file, sep = ',', col.names = is_header, row.names = FALSE, quote = FALSE, append = FALSE)
-	
+	if (str_detect(delim, 't')){
+	  write.table(sampled_df, file = output_file, sep = '\t', col.names = is_header, row.names = FALSE, quote = FALSE, append = FALSE)
+	} else if (str_detect(delim, ',')) {
+	  write.table(sampled_df, file = output_file, sep = ',', col.names = is_header, row.names = FALSE, quote = FALSE, append = FALSE)
+	}
 
 }
 
