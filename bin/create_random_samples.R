@@ -6,10 +6,11 @@
 #
 # Arguments:
 # 	1. input file
-#   2. TRUE/FALSE for whether or not there is a header
-# 	3. column to randomly sample (number or name, and if name, header is assumed!)
-#   4. number of samples to return
-#	  5. output file
+#   2. delimiter, can be either a comma (,) or a tab (/t)
+#   3. TRUE/FALSE for whether or not there is a header
+# 	4. column to randomly sample (number or name, and if name, header is assumed!)
+#   5. number of samples to return
+#	  6. output file
 #
 # Output:
 #   1. a file containing the same columns as the input file, but with only N random samples
@@ -19,16 +20,22 @@ main <- function() {
 	# get commmand line args
 	args <- commandArgs(trailingOnly = TRUE)
 	input_file <- args[1]
-	is_header <- as.logical(args[2])
-	sample_col <- args[3]
-	sample_N <- as.numeric(args[4])
-	output_file	<- args[5]
+	delim <- args[2]
+	print(delim)
+	is_header <- as.logical(args[3])
+	sample_col <- args[4]
+	sample_N <- as.numeric(args[5])
+	output_file	<- args[6]
 	
 	# load libraries
 	library(stringr)
 	
 	# load input file
-	df <- read.table(file = input_file, sep = ',', header = is_header)
+	if (str_detect(delim, 't')){
+	  df <- read.table(file = input_file, header = is_header)
+	} else if (str_detect(delim, ',')) {
+	  df <- read.table(file = input_file, sep = ',', header = is_header)
+	}
 	print(head(df))
 	
 	# get random samples from the data frame
