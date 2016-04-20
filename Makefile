@@ -147,17 +147,17 @@ data/temp_phenotype_amphid_dyf_dichotomous.csv: bin/create_random_samples.R data
 	Rscript bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv \t TRUE 1 50 data/temp_phenotype_amphid_dyf_dichotomous.csv
 	
 ## Create list of randomly selected strains from temp_phenotype_amphid_dyf.csv
-#data/temp_list_VCstrains_vcf.txt: data/temp_phenotype_amphid_dyf_dichotomous.csv
-#	awk '{print $$1}' data/temp_phenotype_amphid_dyf_dichotomous.csv | grep -h "^VC*" > data/temp_list_VCstrains_vcf.txt
+data/temp_list_VCstrains_vcf.txt: data/temp_phenotype_amphid_dyf_dichotomous.csv
+	awk '{print $$1}' data/temp_phenotype_amphid_dyf_dichotomous.csv | grep -h "^VC*" > data/temp_list_VCstrains_vcf.txt
 
 ## Create a vcf file from these random selected strains, only variants from data/MMPfiltered.vcf
-#data/temp_MMPfiltered.vcf: bin/filter_MMP_variants.pl data/MMPfiltered.vcf
-#	gunzip -c data/MMP.vcf.gz | perl bin/filter_MMP_variants.pl -input - -output data/temp_MMPcoding.vcf -strain data/temp_list_VCstrains_vcf.txt -protein
+data/temp_MMPfiltered.vcf: bin/filter_MMP_variants.pl data/MMPfiltered.vcf
+	gunzip -c data/MMP.vcf.gz | perl bin/filter_MMP_variants.pl -input - -output data/temp_MMPcoding.vcf -strain data/temp_list_VCstrains_vcf.txt -protein
 
 ## Create binary plink files from the vcf file
-#data/power data/power/temp_MMPfiltered.fam data/power/temp_MMPfiltered.bim data/power/temp_MMPfiltered.bed data/power/temp_MMPfiltered.log: data/temp_MMPfiltered.vcf
-#	if [ ! -d "data/power/" ]; then mkdir data/power; fi
-#	plink --vcf data/temp_MMPfiltered.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out data/power/temp_MMPfiltered
+data/power data/power/temp_MMPfiltered.fam data/power/temp_MMPfiltered.bim data/power/temp_MMPfiltered.bed data/power/temp_MMPfiltered.log: data/temp_MMPfiltered.vcf
+	if [ ! -d "data/power/" ]; then mkdir data/power; fi
+	plink --vcf data/temp_MMPfiltered.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out data/power/temp_MMPfiltered
 
 ## Perform SKAT analysis
 #data/power/SKAT_pANDq_no_weights_results.csv: bin/do_SKAT_no_weights.R data/power/temp_MMPfiltered.fam data/MMPfiltered.SSID data/phenotype_amphid_dyf_dichotomous.csv
