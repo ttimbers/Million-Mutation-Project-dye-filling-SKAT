@@ -138,12 +138,12 @@ data/Table_S6.csv: bin/create_supp_results_table.R data/phasmid_dyf/SKAT_no_weig
 #	Rscript bin/create_random_strains_w_phenotypes.R data/phenotype_amphid_dyf_dichotomous.csv 50 data/temp_phenotype_amphid_dyf_dichotomous.csv
 
 ## Create list of randomly selected strains from temp_phenotype_amphid_dyf.csv
-data/temp_list_VCstrains_vcf.txt: data/temp_phenotype_amphid_dyf_dichotomous.csv
-	awk '{print $$1}' data/temp_phenotype_amphid_dyf_dichotomous.csv | grep -h "^VC*" > data/temp_list_VCstrains_vcf.txt
+#data/temp_list_VCstrains_vcf.txt: data/temp_phenotype_amphid_dyf_dichotomous.csv
+#	awk '{print $$1}' data/temp_phenotype_amphid_dyf_dichotomous.csv | grep -h "^VC*" > data/temp_list_VCstrains_vcf.txt
 
 ## Create a vcf file from these random selected strains, only variants from data/MMPfiltered.vcf
 #data/temp_MMPfiltered.vcf: bin/filter_MMP_variants.pl data/MMPfiltered.vcf
-#	code here
+#	gunzip -c data/MMP.vcf.gz | perl bin/filter_MMP_variants.pl -input - -output data/temp_MMPcoding.vcf -strain data/temp_list_VCstrains_vcf.txt -protein
 
 ## Create binary plink files from the vcf file
 #data/power data/power/temp_MMPfiltered.fam data/power/temp_MMPfiltered.bim data/power/temp_MMPfiltered.bed data/power/temp_MMPfiltered.log: data/temp_MMPfiltered.vcf
