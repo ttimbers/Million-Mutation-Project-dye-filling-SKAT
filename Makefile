@@ -4,10 +4,19 @@
 ## Makefile pipeline for SKAT analysis of genomic and phenotype data of Million Mutation 
 ## Project strains dye-filling phenotypes reported in Timbers et al.
 ##
-## Dependencies: Bash Shell, Make, Perl, plink v1.90b1g (assumes that you have made plink 
-## executable and put it in your Bash Shell's $PATH), R and R packages 
-## SKAT (version 0.95), stringr, fdrtool, plyr and dplyr
-
+## Dependencies: 
+## 		Bash Shell (version 3.2.57(1))
+## 		Make (version 3.81)
+## 		Perl (v5.18.2)
+## 		Plink (v1.90b3.36) (assumes that you have made plink executable and put it in your Bash Shell's $PATH)
+## 		R (version 3.2.3)
+## 		R packages:
+## 		dplyr (version 0.4.3)
+## 		fdrtool (version 1.2.15)
+## 		plyr (version 1.8.3)
+## 		pwr (version 1.1-3)
+## 		SKAT (version 1.0.9)
+## 		stringr (version 1.0.0)
 
 ## Final files to be generated from SKAT analysis
 all: data/Table_S3.csv data/Table_S4.csv data/Table_S5.csv data/Table_S6.csv
@@ -134,9 +143,9 @@ data/Table_S6.csv: bin/create_supp_results_table.R data/phasmid_dyf/SKAT_no_weig
 ## Make loop over these targets 1000 times
 
 ## Create list of randomly sampled strains (without replacement) & phenotype data from data/phenotype_amphid_dyf_dichotomous.csv
-#data/temp_phenotype_amphid_dyf_dichotomous.csv: bin/create_random_strain_list.R data/phenotype_amphid_dyf.csv
-#	Rscript bin/create_random_strains_w_phenotypes.R data/phenotype_amphid_dyf_dichotomous.csv 50 data/temp_phenotype_amphid_dyf_dichotomous.csv
-
+data/temp_phenotype_amphid_dyf_dichotomous.csv: bin/create_random_strain_list.R data/phenotype_amphid_dyf_dichotomous.csv
+	Rscript bin/create_random_strains_w_phenotypes.R data/phenotype_amphid_dyf_dichotomous.csv TRUE 1 5 data/temp_phenotype_amphid_dyf_dichotomous.csv
+	
 ## Create list of randomly selected strains from temp_phenotype_amphid_dyf.csv
 #data/temp_list_VCstrains_vcf.txt: data/temp_phenotype_amphid_dyf_dichotomous.csv
 #	awk '{print $$1}' data/temp_phenotype_amphid_dyf_dichotomous.csv | grep -h "^VC*" > data/temp_list_VCstrains_vcf.txt
@@ -188,7 +197,7 @@ clean:
 	-rm -f data/Table_S5.csv
 	-rmdir data/amphid_dyf
 	
-	#phasmid associated files
+	# phasmid associated files
 	-rm -f data/phenotype_phasmid_dyf_dichotomous.csv
 	-rm -f data/phasmid_dyf/MMPfiltered.fam data/phasmid_dyf/MMPfiltered.bim data/phasmid_dyf/MMPfiltered.bed data/phasmid_dyf/MMPfiltered.log
 	-rm -f data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt
@@ -197,3 +206,6 @@ clean:
 	-rm -f data/Table_S4.csv
 	-rm -f data/Table_S6.csv
 	-rmdir data/phasmid_dyf 
+	
+	# bootstrap power analysis related files
+	-rm -f data/temp_phenotype_amphid_dyf_dichotomous.csv
