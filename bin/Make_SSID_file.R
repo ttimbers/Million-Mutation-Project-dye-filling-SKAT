@@ -6,7 +6,7 @@ main <- function() {
 	ptm <- proc.time() 
 
 	## load libraries
-	require(stringr)
+	library(stringr)
 
 	## assign command line arguments
 	args <- commandArgs(trailingOnly = TRUE)
