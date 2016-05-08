@@ -2,6 +2,15 @@
 # Tiffany Timbers
 # 2016-05-08
 
+## testing that the script runs
+echo $PBS_JOBID >> data/stdout.txt
+
+## testing that we can make directories with the jobID
+mkdir data/$PBS_JOBID
+
+## testing that we can add .$PBS_JOBID to filenames
+cp data/phenotype_amphid_dyf.csv data/phenotype_amphid_dyf.csv.$PBS_JOBID
+
 ## Create list of randomly sampled strains (without replacement) & phenotype data from data/phenotype_amphid_dyf_dichotomous.csv
 Rscript bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv \t TRUE 1 $1 data/temp_phenotype_amphid_dyf_dichotomous.csv.$PBS_JOBID
 
