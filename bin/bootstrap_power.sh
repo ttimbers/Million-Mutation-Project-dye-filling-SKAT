@@ -35,7 +35,7 @@ Rscript bin/Make_SSID_file.R data/temp_MMPcoding.vcf.$cID data/temp_MMPcoding.SS
 Rscript bin/create_reduced_variant_files.R data/temp_MMPcoding.vcf.$cID data/temp_MMPcoding.SSID.$cID 7 data/temp_MMPfiltered.vcf.$cID data/temp_MMPfiltered.SSID.$cID
 
 ## Create binary plink files from the vcf file
-if [ ! -d "data/$PBS_JOBID" ]; then mkdir data/$cID; fi
+if [ ! -d "data/$cID" ]; then mkdir data/$cID; fi
 plink --vcf data/temp_MMPfiltered.vcf.$cID --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out data/power/temp_MMPfiltered
 
 ## Perform SKAT analysis
