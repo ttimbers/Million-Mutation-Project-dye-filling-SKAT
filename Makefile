@@ -144,7 +144,7 @@ data/Table_S6.csv: bin/create_supp_results_table.R data/phasmid_dyf/SKAT_no_weig
 
 ## Create list of randomly sampled strains (without replacement) & phenotype data from data/phenotype_amphid_dyf_dichotomous.csv
 data/temp_phenotype_amphid_dyf_dichotomous.csv: bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv
-	Rscript bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv \t TRUE 1 50 data/temp_phenotype_amphid_dyf_dichotomous.csv
+	Rscript bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv \t TRUE 1 200 data/temp_phenotype_amphid_dyf_dichotomous.csv
 	
 ## Create list of randomly selected strains from temp_phenotype_amphid_dyf.csv
 data/temp_list_VCstrains_vcf.txt: data/temp_phenotype_amphid_dyf_dichotomous.csv
