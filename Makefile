@@ -148,7 +148,7 @@ data/temp_phenotype_amphid_dyf_dichotomous.csv: bin/create_random_samples.R data
 
 ## Create list of randomly selected strains from temp_phenotype_amphid_dyf.csv
 data/temp_list_VCstrains_vcf.txt: data/temp_phenotype_amphid_dyf_dichotomous.csv
-	awk '{print $$1}' data/temp_phenotype_amphid_dyf_dichotomous.csv | grep -h "^VC*" > data/temp_list_VCstrains_vcf.txt
+	awk '{print $$1}' data/temp_phenotype_amphid_dyf_dichotomous.csv| grep -h "^VC*" > data/temp_list_VCstrains_vcf.txt
 
 ## Create a vcf file from these random selected strains, only variants from data/MMPfiltered.vcf
 data/temp_MMPcoding.vcf: bin/filter_MMP_variants.pl data/MMPfiltered.vcf
