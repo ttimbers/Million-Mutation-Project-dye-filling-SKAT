@@ -2,6 +2,9 @@
 # Tiffany Timbers
 # 2016-05-08
 
+# export path to plink to $PATH
+export PATH="/usr/bin/plink:$PATH"
+
 ## testing that the script runs
 echo $PATH >> data/stdout.txt
 echo $PBS_JOBID >> data/stdout.txt
