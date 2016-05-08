@@ -3,6 +3,7 @@
 # 2016-05-08
 
 ## testing that the script runs
+echo $PATH >> data/stdout.txt
 echo $PBS_JOBID >> data/stdout.txt
 
 ## testing that we can make directories with the jobID
