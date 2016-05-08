@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l walltime=00:30:00
+#PBS -l walltime=03:00:00
 #PBS -l nodes=1:ppn=1
 
 # load docker image
