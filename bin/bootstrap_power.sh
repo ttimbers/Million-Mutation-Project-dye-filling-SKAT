@@ -17,7 +17,7 @@ cID=$(cat /proc/self/cgroup | grep "cpu:/" | sed 's/\([0-9]\):cpu:\/docker\///g'
 mkdir data/$cID
 
 ## Create list of randomly sampled strains (without replacement) & phenotype data from data/phenotype_amphid_dyf_dichotomous.csv
-Rscript bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv \t TRUE 1 $1 data/$cID/temp_phenotype_amphid_dyf_dichotomous.csv
+Rscript bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv \t TRUE 1 200 data/$cID/temp_phenotype_amphid_dyf_dichotomous.csv
 
 ## Create list of randomly selected strains from temp_phenotype_amphid_dyf.csv
 #awk '{print $1}' data/$cID/temp_phenotype_amphid_dyf_dichotomous.csv | grep -h "^VC*" > data/$cID/temp_list_VCstrains_vcf.tsv
