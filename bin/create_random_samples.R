@@ -1,7 +1,7 @@
 # Tiffany Timbers
 # April 20, 2016
 #
-# Rscript that randomly samples, without replacement, samples (rows) from a csv file and 
+# Rscript that randomly samples, without replacement, samples (rows) from a csv file and
 # then saves the output of that file
 #
 # Arguments:
@@ -26,10 +26,10 @@ main <- function() {
 	sample_col <- args[4]
 	sample_N <- as.numeric(args[5])
 	output_file	<- args[6]
-	
+
 	# load libraries
 	library(stringr)
-	
+
 	# load input file
 	if (str_detect(delim, 't')){
 	  df <- read.table(file = input_file, header = is_header)
@@ -37,11 +37,11 @@ main <- function() {
 	  df <- read.table(file = input_file, sep = ',', header = is_header)
 	}
 	print(head(df))
-	
+
 	# get random samples from the data frame
 	sampled_df <- get_random_sample(x = df, col = sample_col, N = sample_N)
 	print(head(sampled_df))
-	
+
 	# write sampled data frame to file
 	if (str_detect(delim, 't')){
 	  write.table(sampled_df, file = output_file, sep = '\t', col.names = is_header, row.names = FALSE, quote = FALSE, append = FALSE)
@@ -51,10 +51,10 @@ main <- function() {
 
 }
 
-# Randomly samples (without replacement) a data frame, and returns a smaller, randomly 
-# sampled data frame. Assumes that you are indexing by column number if col begins with 
+# Randomly samples (without replacement) a data frame, and returns a smaller, randomly
+# sampled data frame. Assumes that you are indexing by column number if col begins with
 # the numbers between 1-9, otherwise, it assumes you are giving a column name.
-# 
+#
 # Arguments:
 #   1. x = a dataframe
 #   2. col = column containing sample IDs
@@ -67,12 +67,12 @@ get_random_sample <- function(x, col, N) {
   # sample data frame if number is provided for column
   if (str_detect(col, '[1-9]{1}')) {
     sampled_x <- x[sample(x[,as.numeric(col)], N, replace = FALSE, prob = NULL),]
-    # sample data frame if name is provided for column    
+    # sample data frame if name is provided for column
   } else {
     sampled_x <- x[sample(x[,col], N, replace = FALSE, prob = NULL),]
   }
 
-  return(sampled_x)  
+  return(sampled_x)
 }
 
 main()

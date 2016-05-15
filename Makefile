@@ -19,7 +19,7 @@
 ## 		stringr (version 1.0.0)
 
 ## Final files to be generated from SKAT analysis
-all: data/Table_S3.csv data/Table_S4.csv data/Table_S5.csv data/Table_S6.csv data/phenotype_amphid_dyf_for_power.csv
+all: data/Table_S3.csv data/Table_S4.csv data/Table_S5.csv data/Table_S6.csv
 
 ##======================================================================================
 ## Analysis of amphid dye-filling phenotype
@@ -138,57 +138,10 @@ data/Table_S6.csv: bin/create_supp_results_table.R data/phasmid_dyf/SKAT_no_weig
 ## Bootstrap Power Analysis
 ##======================================================================================
 
-## make files necessary for bootstrap power analysis
-data/phenotype_amphid_dyf_for_power.csv: data/phenotype_amphid_dyf_dichotomous.csv
-	grep -v "VC2010" data/phenotype_amphid_dyf_dichotomous.csv > data/phenotype_amphid_dyf_for_power.csv
+## to run power analysis in a reasonable amount of time you need access to a cluster
+## I used compute canada's Guillimin.
 
-## Do this for N = 50, 100, 200, 300, 400
-
-## Make loop over these targets 1000 times for each sample size
-
-## Create list of randomly sampled strains (without replacement) & phenotype data from data/phenotype_amphid_dyf_dichotomous.csv
-#data/temp_phenotype_amphid_dyf_dichotomous.csv: bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv
-#	Rscript bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv \t TRUE 1 ${N} data/temp_phenotype_amphid_dyf_dichotomous.csv
-
-## Create list of randomly selected strains from temp_phenotype_amphid_dyf.csv
-#data/temp_list_VCstrains_vcf.txt: data/temp_phenotype_amphid_dyf_dichotomous.csv
-#	awk '{print $$1}' data/temp_phenotype_amphid_dyf_dichotomous.csv| grep -h "^VC*" > data/temp_list_VCstrains_vcf.txt
-
-## Create a vcf file from these random selected strains, only variants from data/MMPfiltered.vcf
-#data/temp_MMPcoding.vcf: bin/filter_MMP_variants.pl data/MMPfiltered.vcf
-#	gunzip -c data/MMP.vcf.gz | perl bin/filter_MMP_variants.pl -input - -output data/temp_MMPcoding.vcf -strain data/temp_list_VCstrains_vcf.txt -protein
-
-## Create SSID file for SKAT analysis
-#data/temp_MMPcoding.SSID: bin/Make_SSID_file.R data/temp_MMPcoding.vcf
-#	Rscript bin/Make_SSID_file.R data/temp_MMPcoding.vcf data/temp_MMPcoding.SSID
-
-## Create a filtered SSID file and vcf file for only variants from those genes which have
-## a specified minimum number of alleles (we chose 7)
-#data/temp_MMPfiltered.vcf data/temp_MMPfiltered.SSID: bin/create_reduced_variant_files.R data/temp_MMPcoding.vcf data/temp_MMPcoding.SSID
-#	Rscript bin/create_reduced_variant_files.R data/temp_MMPcoding.vcf data/temp_MMPcoding.SSID 7 data/temp_MMPfiltered.vcf data/temp_MMPfiltered.SSID
-
-## Create binary plink files from the vcf file
-#data/power data/power/temp_MMPfiltered.fam data/power/temp_MMPfiltered.bim data/power/temp_MMPfiltered.bed data/power/temp_MMPfiltered.log: data/temp_MMPfiltered.vcf
-#	if [ ! -d "data/power/" ]; then mkdir data/power; fi
-#	plink --vcf data/temp_MMPfiltered.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out data/power/temp_MMPfiltered
-
-## Perform SKAT analysis
-#data/power/temp_SKAT_pANDq_no_weights_results.csv: bin/do_SKAT_no_weights.R data/power/temp_MMPfiltered.fam data/temp_MMPfiltered.SSID data/temp_phenotype_amphid_dyf_dichotomous.csv
-#	Rscript bin/do_SKAT_no_weights.R data/power/temp_MMPfiltered.fam data/temp_phenotype_amphid_dyf_dichotomous.csv data/power data/temp_MMPfiltered.SSID
-
-##======================================================================================
-## Plot data for paper (characterization of bgnt-1)
-##======================================================================================
-## Note - these are not in make syntax yet...
-
-## plot ADL cilia length in bgnt-1 and wild-type
-#Rscript bin/analyze_length.R data/ADL_cilia_length_unblind_2015-07-31.csv cilia data/cilia_length.pdf data/cilia_length.stats
-
-## plot distal tip of ADL cilia to distal end of socket cell length in bgnt-1 and wild-type
-#Rscript bin/analyze_length.R data/distal_end_of_ADL_cilia_to_distal_end_of_socket_unblind.csv cilia_socket_diss data/distal_end_of_ADL_cilia_to_distal_end_of_socket.pdf data/distal_end_of_ADL_cilia_to_distal_end_of_socket.stats
-
-## plot proportion of animals that have > 1 ADL cilia per amphid
-#Rscript bin/ADL-guidance.R data/ADL-guidance.csv data/ADL-guidance.pdf data/ADL-guidance.stats
+## The code I ran can be found in run_bootstrap_power.sh
 
 ##======================================================================================
 ## Clean: files to delete if to reset to project start before analysis
