@@ -15,9 +15,10 @@ cID=$(cat /proc/self/cgroup | grep "cpu:/" | sed 's/\([0-9]\):cpu:\/docker\///g'
 
 ## testing that we can make directories with the jobID
 mkdir data/$cID
+touch data/$cID I_can_write_a_file_here!
 
 ## Create list of randomly sampled strains (without replacement) & phenotype data from data/phenotype_amphid_dyf_dichotomous.csv
-Rscript bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv \t TRUE 1 200 data/$cID/temp_phenotype_amphid_dyf_dichotomous.csv
+Rscript bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv t TRUE 1 200 data/$cID/temp_phenotype_amphid_dyf_dichotomous.csv
 
 ## Create list of randomly selected strains from temp_phenotype_amphid_dyf.csv
 #awk '{print $1}' data/$cID/temp_phenotype_amphid_dyf_dichotomous.csv | grep -h "^VC*" > data/$cID/temp_list_VCstrains_vcf.tsv
