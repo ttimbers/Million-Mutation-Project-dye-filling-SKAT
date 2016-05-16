@@ -17,7 +17,7 @@ cID=$(cat /proc/self/cgroup | grep "cpu:/" | sed 's/\([0-9]\):cpu:\/docker\///g'
 mkdir data/$cID
 
 ## write a log file that matches input N with container ID
-echo $cID','$1 > power.log
+echo $cID','$1 > data/$cID/power.log
 
 ## Create list of randomly sampled strains (without replacement) & phenotype data from data/phenotype_amphid_dyf_dichotomous.csv
 Rscript bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv \t TRUE 1 $1 data/$cID/temp_phenotype_amphid_dyf_dichotomous.csv
