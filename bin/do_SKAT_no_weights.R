@@ -17,7 +17,6 @@ main <- function() {
 
 	## load libraries	
 	require(SKAT)
-	require(fdrtool)
 
 	## assign command line arguements
 	args <- commandArgs(trailingOnly = TRUE)
@@ -59,8 +58,9 @@ main <- function() {
 	p.values.no.weights <- mydata.SKAT.no.weights[order(mydata.SKAT.no.weights[,2]),]
 
 	## do False Discovery Rate analysis for SKAT without weights
-	pq_wo_weights <- fdr_adjust(p.values.no.weights)
-	write.table(pq_wo_weights, paste(path_to_plink_files, "/SKAT_pANDq_no_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
+	p.values.no.weights$p_adjust <- p.adjust(p.values.no.weights$P.value, method = "BH")
+	
+	write.table(p.values.no.weights, paste(path_to_plink_files, "/SKAT_pANDq_no_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## output time to run script
   	the_time <- proc.time() - ptm # Stop the clock
@@ -81,14 +81,6 @@ write_to_fam <- function(path, phenotypes) {
   pheno_vals <- pheno_vals[order(pheno_vals[,1]),]
   fam.file$V6  <- pheno_vals[,2]
   write.table(fam.file, path, sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE, append=FALSE)
-}
-
-## generate q-values using false discovery rate using fdrtool()
-fdr_adjust <- function(pvals) {
-    qvals <- fdrtool(pvals$P.value, statistic = "pvalue", cutoff.method="fndr")
-    pvals$Q.value  <- qvals$qval
-    pAndqvals <- pvals
-    return(pAndqvals) 
 }
 
 main()
