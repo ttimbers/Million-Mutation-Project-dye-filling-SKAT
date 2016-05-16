@@ -22,7 +22,7 @@ main <- function(){
   phenotype_counts <- phenotype_counts[phenotype_counts$Strain != 'VC2010',]
   
   # add column of proportion of worms with defects
-  phenotype_counts$prop <- phenotype_counts$Amphid_defect_count/phenotype_counts$N
+  phenotype_counts$prop <- phenotype_counts[,2]/phenotype_counts$N
   
   # add 0.05 to each proportion so that there are no 0's
   phenotype_counts$prop <- phenotype_counts$prop + 0.05
@@ -31,7 +31,7 @@ main <- function(){
   phenotype_counts$log_prop <- log(phenotype_counts$prop)
 
   # remove unnecessary columns
-  phenotype_counts$Amphid_defect_count <- NULL
+  phenotype_counts[,2] <- NULL
   phenotype_counts$N <- NULL
   
   # save this data to a file to be used for SKAT analysis

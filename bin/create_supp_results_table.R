@@ -22,7 +22,7 @@ main <- function(){
   
   ## load data files
   SKAT_results <- read.table(SKAT_results_file, header = TRUE)
-  gene_publicName_N_sequenceName <- read.table(path_to_gene_publicName_N_sequenceName, header=FALSE, sep="\t")
+  gene_publicName_N_sequenceName <- read.table(gene_publicName_N_sequenceName, header=FALSE, sep="\t")
   
   ## drop unnecessary columns
   SKAT_results$N.Marker.All <- NULL
