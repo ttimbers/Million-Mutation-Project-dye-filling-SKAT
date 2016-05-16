@@ -25,22 +25,19 @@ all: data/Table_S3.csv data/Table_S4.csv data/Table_S5.csv data/Table_S6.csv
 ## Analysis of amphid dye-filling phenotype
 ##======================================================================================
 
-## Assign dichotomous amphid dye-filling phenotype to strains. This script takes 2
+## Transforms count data to a logit transformed proportion. This script takes 2
 ## arguments: (1) a comma delimited .csv file (which has 5 columns: Strain,
 ## phenotype, N), and (2) output filename.
 ##
-## Returns a tab delimited .csv file (which has 4 columns: strain, phenotype, pvals,
-## fdr.bh). The phenotype column contains 1 if strain's phenotype diverges significantly
-## from wild-type (Fisher's exact test) and contain 1 if strain's phenotype diverges
-## significantly from wild-type, and 0 if it does not. A 5% FDR (Benjamini-Hochberg
-## procedure) is used to adjust for multiple comparisons.
-data/phenotype_amphid_dyf_dichotomous.csv: bin/Assign_dichotomous_phenotype.R data/phenotype_amphid_dyf.csv
-	Rscript bin/Assign_dichotomous_phenotype.R data/phenotype_amphid_dyf.csv data/phenotype_amphid_dyf_dichotomous.csv
+## Returns a tab delimited .tsv file (which has 4 columns: strain, phenotype,
+## dyf_proportion, and logit(dyf_proportion)).
+data/phenotype_amphid_dyf_log.tsv: bin/log_transform_phenotype.R data/phenotype_amphid_dyf.csv
+	Rscript bin/log_transform_phenotype.R data/phenotype_amphid_dyf.csv data/phenotype_amphid_dyf_log.tsv
 
-## Extracts the strain column from the phenotype_amphid_dyf_dichotomous.csv file created
+## Extracts the strain column from the data/phenotype_amphid_dyf_log.tsv file created
 ## above and saves it as list_VCstrains_vcf.txt
-data/list_VCstrains_vcf.txt: data/phenotype_amphid_dyf_dichotomous.csv
-	awk '{print $$1}' data/phenotype_amphid_dyf_dichotomous.csv | grep -h "^VC*" > data/list_VCstrains_vcf.txt
+data/list_VCstrains_vcf.txt: data/phenotype_amphid_dyf_log.tsv
+	awk '{print $$1}' data/phenotype_amphid_dyf_log.tsv | grep -h "^VC*" > data/list_VCstrains_vcf.txt
 
 ## Creates one merged .vcf file for only the strains that were assayed (listed in a file
 ## called list_VCstrains_vcf.txt. Uses -protein argument creates a merged .vcf file with
@@ -72,13 +69,13 @@ data/amphid_dyf data/amphid_dyf/MMPfiltered.fam data/amphid_dyf/MMPfiltered.bim 
 	if [ ! -d "data/amphid_dyf/" ]; then mkdir data/amphid_dyf; fi
 	plink --vcf data/MMPfiltered.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out data/amphid_dyf/MMPfiltered
 
-## Perform SKAT analysis
-data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_dichotomous.csv
-	Rscript bin/do_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
+## Perform linear regression SKAT analysis
+data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_log.tsv
+	Rscript bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_log.tsv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
 
 ## Calculate effect size
-data/amphid_dyf/MMPfiltered.gvsp data/amphid_dyf/MMPfiltered.effectsize: bin/calculate_effect_size.R data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf
-	Rscript bin/calculate_effect_size.R data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf data/gene_publicName_N_sequenceName.txt data/amphid_dyf/MMPfiltered.gvsp data/amphid_dyf/MMPfiltered.effectsize
+#data/amphid_dyf/MMPfiltered.gvsp data/amphid_dyf/MMPfiltered.effectsize: bin/calculate_effect_size.R data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf
+#	Rscript bin/calculate_effect_size.R data/phenotype_amphid_dyf_dichotomous.csv data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/MMPfiltered.SSID data/MMPfiltered.vcf data/gene_publicName_N_sequenceName.txt data/amphid_dyf/MMPfiltered.gvsp data/amphid_dyf/MMPfiltered.effectsize
 
 ## Create Table S3 (Genome-wide association results from the SKAT of MMP DNA
 ## sequence variance and amphid dye-filling when variants were assigned biologically
