@@ -85,8 +85,8 @@ write_to_fam <- function(path, phenotypes) {
 
 ## generate q-values using false discovery rate using fdrtool()
 fdr_adjust <- function(pvals) {
-    adjst_pvals <- p.adjust(pvals$P.value, method = "BH", n = length(pvals))
-    pvals$adjst_pvals  <- adjst_pvals
+    qvals <- fdrtool(pvals$P.value, statistic = "pvalue", cutoff.method="fndr")
+    pvals$Q.value  <- qvals$qval
     pAndqvals <- pvals
     return(pAndqvals) 
 }
