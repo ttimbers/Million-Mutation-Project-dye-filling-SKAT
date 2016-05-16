@@ -26,7 +26,7 @@ main <- function(){
   names(data)[names(data)=="new"] <- column_name
   
   # write file
-  write.table(data, sep = '\t', col.names = TRUE, row.names = FALSE, append = FALSE, quote = FALSE)
+  write.table(data, file = output_file, sep = '\t', col.names = TRUE, row.names = FALSE, append = FALSE, quote = FALSE)
 }
 
 main()
