@@ -108,8 +108,8 @@ data/phasmid_dyf data/phasmid_dyf/MMPfiltered.fam data/phasmid_dyf/MMPfiltered.b
 	plink --vcf data/MMPfiltered.vcf --allow-extra-chr --out data/phasmid_dyf/MMPfiltered
 
 ## Perform SKAT analysis (use SSID file made above)
-data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt: bin/do_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_log.tsv data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
-	Rscript bin/do_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_log.tsv data/phasmid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
+data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt: bin/do_linear_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_log.tsv data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
+	Rscript bin/do_linear_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_log.tsv data/phasmid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
 
 ## Create Table S4 (Genome-wide association results from the SKAT of MMP DNA
 ## sequence variance and phasmid dye-filling when variants were assigned biologically
