@@ -48,7 +48,7 @@ main <- function() {
 		
 	## create null model based on phenotypes
 	set.seed(1234)
-	Null_Model <- SKAT_Null_Model(fam_phenotypes_vector ~ 1, out_type="D")
+	Null_Model <- SKAT_Null_Model(fam_phenotypes_vector ~ 1, out_type="C")
 
 	## perform SKAT on all sets of variants (no weights)
 	set.seed(1234)
@@ -61,7 +61,7 @@ main <- function() {
 	## do False Discovery Rate analysis for SKAT without weights
 	p.values.no.weights$p_adjust <- p.adjust(p.values.no.weights$P.value, method = "bonferroni")
 
-	write.table(pq_wo_weights, paste(path_to_plink_files, "/SKAT_pANDq_no_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
+	write.table(p.values.no.weights, paste(path_to_plink_files, "/SKAT_pANDq_no_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## output time to run script
   	the_time <- proc.time() - ptm # Stop the clock
@@ -80,7 +80,7 @@ write_to_fam <- function(path, phenotypes) {
   fam.file <- fam.file[order(fam.file[,1]),]
   pheno_vals <- read.table(phenotypes, header=TRUE)
   pheno_vals <- pheno_vals[order(pheno_vals[,1]),]
-  fam.file$V6  <- pheno_vals[,2]
+  fam.file$V6  <- pheno_vals[,3]
   write.table(fam.file, path, sep="\t", row.names=FALSE, col.names=FALSE, quote=FALSE, append=FALSE)
 }
 
