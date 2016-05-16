@@ -8,11 +8,6 @@ export PATH="/usr/bin/plink:$PATH"
 # get container ID
 cID=$(cat /proc/self/cgroup | grep "cpu:/" | sed 's/\([0-9]\):cpu:\/docker\///g')
 
-## testing that the script runs
-#echo $PATH >> data/stdout.txt
-#echo $cID >> data/stdout.txt
-#echo $1 >> data/stdout.txt
-
 ## testing that we can make directories with the jobID
 mkdir data/$cID
 
