@@ -39,3 +39,6 @@ Rscript bin/do_SKAT_no_weights.R data/$cID/temp_MMPfiltered.fam data/$cID/temp_p
 
 ## add N to dataframe
 Rscript bin/add_column_to_tsv.R SKAT_pANDq_no_weights_results.txt $1 N SKAT_pANDq_no_weights_results.txt
+
+## add container ID to dataframe
+Rscript bin/add_column_to_tsv.R SKAT_pANDq_no_weights_results.txt $cID N SKAT_pANDq_no_weights_results.txt
