@@ -61,7 +61,7 @@ main <- function() {
 	## do False Discovery Rate analysis for SKAT without weights
 	p.values.no.weights$p_adjust <- p.adjust(p.values.no.weights$P.value, method = "bonferroni")
 
-	write.table(p.values.no.weights, paste(path_to_plink_files, "/SKAT_pANDq_no_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
+	write.table(p.values.no.weights, paste(path_to_plink_files, "/SKAT_no_weights.tsv", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## output time to run script
   	the_time <- proc.time() - ptm # Stop the clock

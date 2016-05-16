@@ -38,7 +38,7 @@ plink --vcf data/$cID/temp_MMPfiltered.vcf --allow-extra-chr --no-fid --no-paren
 Rscript bin/do_SKAT_no_weights.R data/$cID/temp_MMPfiltered.fam data/$cID/temp_phenotype_amphid_dyf_log.tsv data/$cID data/$cID/temp_MMPfiltered.SSID
 
 ## add N to dataframe
-Rscript bin/add_column_to_tsv.R SKAT_pANDq_no_weights_results.txt $1 N SKAT_pANDq_no_weights_results.txt
+Rscript bin/add_column_to_tsv.R data/$cID/SKAT_no_weights.tsv $1 N data/$cID/SKAT_no_weights.tsv
 
 ## add container ID to dataframe
-Rscript bin/add_column_to_tsv.R SKAT_pANDq_no_weights_results.txt $cID N SKAT_pANDq_no_weights_results.txt
+Rscript bin/add_column_to_tsv.R data/$cID/SKAT_no_weights.tsv $cID N data/$cID/SKAT_no_weights.tsv
