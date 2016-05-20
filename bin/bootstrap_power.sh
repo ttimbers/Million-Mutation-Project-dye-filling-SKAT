@@ -15,10 +15,10 @@ mkdir data/$cID
 echo $cID','$1 > data/$cID/power.log
 
 ## Create list of randomly sampled strains (without replacement) & phenotype data from data/phenotype_amphid_dyf_dichotomous.csv
-Rscript bin/create_random_samples.R data/phenotype_amphid_dyf_dichotomous.csv \t TRUE 1 $1 data/$cID/temp_phenotype_amphid_dyf_dichotomous.csv
+Rscript bin/create_random_samples.R data/phenotype_amphid_dyf_log.tsv \t TRUE 1 $1 data/$cID/temp_phenotype_amphid_dyf_log.tsv
 
 ## Create list of randomly selected strains from temp_phenotype_amphid_dyf.csv
-awk '{print $1}' data/$cID/temp_phenotype_amphid_dyf_dichotomous.csv | grep -h "^VC*" > data/$cID/temp_list_VCstrains_vcf.tsv
+awk '{print $1}' data/$cID/temp_phenotype_amphid_dyf_log.tsv | grep -h "^VC*" > data/$cID/temp_list_VCstrains_vcf.tsv
 
 ## Create a vcf file from these random selected strains, only variants from data/MMPfiltered.vcf
 gunzip -c data/MMP.vcf.gz | perl bin/filter_MMP_variants.pl -input - -output data/$cID/temp_MMPcoding.vcf -strain data/$cID/temp_list_VCstrains_vcf.tsv -protein
@@ -35,4 +35,13 @@ Rscript bin/create_reduced_variant_files.R data/$cID/temp_MMPcoding.vcf data/$cI
 plink --vcf data/$cID/temp_MMPfiltered.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out data/$cID/temp_MMPfiltered
 
 ## Perform SKAT analysis
-Rscript bin/do_SKAT_no_weights.R data/$cID/temp_MMPfiltered.fam data/$cID/temp_phenotype_amphid_dyf_dichotomous.csv data/$cID data/$cID/temp_MMPfiltered.SSID
+Rscript bin/do_SKAT_no_weights.R data/$cID/temp_MMPfiltered.fam data/$cID/temp_phenotype_amphid_dyf_log.tsv data/$cID data/$cID/temp_MMPfiltered.SSID
+
+## add N to dataframe
+Rscript bin/add_column_to_tsv.R data/$cID/SKAT_no_weights.tsv $1 N data/$cID/SKAT_no_weights.tsv
+
+## add container ID to dataframe
+Rscript bin/add_column_to_tsv.R data/$cID/SKAT_no_weights.tsv $cID N data/$cID/SKAT_no_weights.tsv
+
+## clean up unneccesary files
+rm data/$cID/temp* data/$cID/file*
