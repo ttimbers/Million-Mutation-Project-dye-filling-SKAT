@@ -10,10 +10,14 @@
 
 main <- function(){
   
+  #load libraries
+  library(ggplot2)
+  
   # assign command line arguments
   args <- commandArgs(trailingOnly = TRUE)
   input_file_path <- args[1]
-  output_file_path <- args[2]
+  output_phenotype_file <- args[2]
+  output_histogram_prefix <- args[3]
   
   # read in data
   phenotype_counts <- read.csv(input_file_path, header=TRUE)
@@ -24,18 +28,32 @@ main <- function(){
   # add column of proportion of worms with defects
   phenotype_counts$prop <- phenotype_counts[,2]/phenotype_counts$N
   
+  # make histogram of raw proportion data and save it
+  raw_hist <- ggplot(data=phenotype_counts, aes(phenotype_counts$prop)) + 
+    geom_histogram(breaks=seq(0, 1, by = 0.05), colour="black", fill="white") +
+    labs(x="Proportion of dye-filling defects", y="Count")
+  ggsave(filename = paste0(output_histogram_prefix, '_raw_phenotype_histogram.pdf'), height = 3, width = 3)
+  
   # add 0.05 to each proportion so that there are no 0's
-  phenotype_counts$prop <- phenotype_counts$prop + 0.05
-
-  # add column of logit transformed proportions
-  phenotype_counts$log_prop <- log(phenotype_counts$prop)
+  phenotype_counts$log_prop <- phenotype_counts$prop + 5e-03
+  
+  # add column of log transformed proportions
+  phenotype_counts$log_prop <- log(phenotype_counts$log_prop)
+  
+  #phenotype_counts$log_prop <- asin(sqrt(phenotype_counts$log_prop))
+  
+  # make histogram of raw proportion data and save it
+  log_hist <- ggplot(data=phenotype_counts, aes(phenotype_counts$log_prop)) + 
+    geom_histogram(breaks=seq(-3, 0.05, by = 0.15), colour="black", fill="white") +
+    labs(x="log(Proportion of dye-filling defects + 5e-03)", y="Count")
+  ggsave(filename = paste0(output_histogram_prefix, '_log_transformed_phenotype_histogram.pdf'), height = 4, width = 4)
 
   # remove unnecessary columns
   phenotype_counts[,2] <- NULL
   phenotype_counts$N <- NULL
   
   # save this data to a file to be used for SKAT analysis
-  write.table(phenotype_counts, output_file_path, sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
+  write.table(phenotype_counts, output_phenotype_file, sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
         
 }
 

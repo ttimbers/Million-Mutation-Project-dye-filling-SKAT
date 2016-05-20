@@ -32,7 +32,7 @@ all: data/Table_S3.csv data/Table_S4.csv data/Table_S5.csv data/Table_S6.csv
 ## Returns a tab delimited .tsv file (which has 4 columns: strain, phenotype,
 ## dyf_proportion, and logit(dyf_proportion)).
 data/phenotype_amphid_dyf_log.tsv: bin/log_transform_phenotype.R data/phenotype_amphid_dyf.csv
-	Rscript bin/log_transform_phenotype.R data/phenotype_amphid_dyf.csv data/phenotype_amphid_dyf_log.tsv
+	Rscript bin/log_transform_phenotype.R data/phenotype_amphid_dyf.csv data/phenotype_amphid_dyf_log.tsv data/amphid
 
 ## Extracts the strain column from the data/phenotype_amphid_dyf_log.tsv file created
 ## above and saves it as list_VCstrains_vcf.txt
@@ -100,7 +100,7 @@ data/Table_S5.csv: bin/create_supp_results_table.R data/amphid_dyf/SKAT_no_weigh
 ## significantly from wild-type, and 0 if it does not. A 5% FDR (Benjamini-Hochberg
 ## procedure) is used to adjust for multiple comparisons.
 data/phenotype_phasmid_dyf_log.tsv: bin/log_transform_phenotype.R data/phenotype_phasmid_dyf.csv
-	Rscript bin/log_transform_phenotype.R data/phenotype_phasmid_dyf.csv data/phenotype_phasmid_dyf_log.tsv
+	Rscript bin/log_transform_phenotype.R data/phenotype_phasmid_dyf.csv data/phenotype_phasmid_dyf_log.tsv data/phasmid
 
 ## Create binary plink files for phasmid phenotype from filtered .vcf file
 data/phasmid_dyf data/phasmid_dyf/MMPfiltered.fam data/phasmid_dyf/MMPfiltered.bim data/phasmid_dyf/MMPfiltered.bed data/phasmid_dyf/MMPfiltered.log: data/MMPfiltered.vcf
