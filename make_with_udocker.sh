@@ -1,10 +1,10 @@
 # !bin/bash
 # Tiffany Timbers, April 8, 2016
 #
-# Bash script to run with udocker (or docker) & ttimbers/mmp-dyf-skat. It functions to add 
+# Bash script to run with udocker (or docker) & ttimbers/mmp-dyf-skat. It functions to add
 # plink to $PATH and run Makefile in Million-Mutation-Project-dye-filling-SKAT directory
 #
-# Arguments: 	1. target to make 
+# Arguments: 	1. target to make
 #				2. path to Million-Mutation-Project-dye-filling-SKAT directory inside container
 #
 # How to run on Compute Canada's guillimin server to make all:
@@ -18,4 +18,4 @@
 export PATH="/usr/bin/plink:$PATH"
 
 # run Makefile in Million-Mutation-Project-dye-filling-SKAT directory
-make $1 -C $2
+make $1
