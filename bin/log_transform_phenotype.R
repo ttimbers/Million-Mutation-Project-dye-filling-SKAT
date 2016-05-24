@@ -32,10 +32,10 @@ main <- function(){
   raw_hist <- ggplot(data=phenotype_counts, aes(phenotype_counts$prop)) + 
     geom_histogram(breaks=seq(0, 1, by = 0.05), colour="black", fill="white") +
     labs(x="Proportion of dye-filling defects", y="Count")
-  ggsave(filename = paste0(output_histogram_prefix, '_raw_phenotype_histogram.pdf'), height = 3, width = 3)
+  ggsave(filename = paste0(output_histogram_prefix, '_raw_phenotype_histogram.pdf'), height = 3.5, width = 3.5)
   
   # add 0.05 to each proportion so that there are no 0's
-  phenotype_counts$log_prop <- phenotype_counts$prop + 5e-03
+  phenotype_counts$log_prop <- phenotype_counts$prop + 0.05
   
   # add column of log transformed proportions
   phenotype_counts$log_prop <- log(phenotype_counts$log_prop)
@@ -44,9 +44,10 @@ main <- function(){
   
   # make histogram of raw proportion data and save it
   log_hist <- ggplot(data=phenotype_counts, aes(phenotype_counts$log_prop)) + 
-    geom_histogram(breaks=seq(-3, 0.05, by = 0.15), colour="black", fill="white") +
+    geom_histogram(breaks=seq(-2.5, 0.5, by = 0.15), colour="black", fill="white") +
     labs(x="log(Proportion of dye-filling defects + 5e-03)", y="Count")
-  ggsave(filename = paste0(output_histogram_prefix, '_log_transformed_phenotype_histogram.pdf'), height = 4, width = 4)
+  log_hist
+  ggsave(filename = paste0(output_histogram_prefix, '_log_transformed_phenotype_histogram.pdf'), height = 3.5, width = 3.5)
 
   # remove unnecessary columns
   phenotype_counts[,2] <- NULL
