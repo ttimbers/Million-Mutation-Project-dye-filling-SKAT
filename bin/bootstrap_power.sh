@@ -41,7 +41,7 @@ Rscript bin/do_SKAT_no_weights.R data/$cID/temp_MMPfiltered.fam data/$cID/temp_p
 Rscript bin/add_column_to_tsv.R data/$cID/SKAT_no_weights.tsv $1 N data/$cID/SKAT_no_weights.tsv
 
 ## add container ID to dataframe
-Rscript bin/add_column_to_tsv.R data/$cID/SKAT_no_weights.tsv $cID N data/$cID/SKAT_no_weights.tsv
+Rscript bin/add_column_to_tsv.R data/$cID/SKAT_no_weights.tsv $cID ID data/$cID/SKAT_no_weights.tsv
 
 ## clean up unneccesary files
 rm data/$cID/temp* data/$cID/file*
