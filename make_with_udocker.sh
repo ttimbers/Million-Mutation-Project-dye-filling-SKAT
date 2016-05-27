@@ -18,4 +18,4 @@
 export PATH="/usr/bin/plink:$PATH"
 
 # run Makefile in Million-Mutation-Project-dye-filling-SKAT directory
-make $1
+make $1 -C $2
