@@ -159,7 +159,9 @@ data/Table_S6.csv: bin/create_supp_results_table.R data/phasmid_dyf/SKAT_no_weig
 
 clean:
 	# amphid associated files
-	-rm -f data/phenotype_amphid_dyf_log.tsv
+	-rm -f data/phenotype_amphid_dyf_not_transformed.tsv
+	-rm -f data/phenotype_amphid_dyf_log_05.tsv
+	-rm -f data/phenotype_amphid_dyf_log_005.tsv
 	-rm -f data/list_VCstrains_vcf.txt
 	-rm -f data/MMPcoding.vcf
 	-rm -f data/MMPcoding.SSID
