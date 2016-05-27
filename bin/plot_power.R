@@ -19,6 +19,7 @@
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(stringr)
 
 input_file <- 'data/SKAT_power_summary_no_path.tsv'
 
@@ -63,12 +64,21 @@ colnames(power) <- c('N', 'gene_n', 'power')
 # make N a number
 power$N <- as.numeric(as.character(power$N))
 
-# reorder levels
+# change words to numbers in gene_n column
+power$gene_n <- sub('one_gene', '1', power$gene_n)
+power$gene_n <- sub('two_genes', '2', power$gene_n)
+power$gene_n <- sub('three_genes', '3', power$gene_n)
+power$gene_n <- sub('four_genes', '4', power$gene_n)
+power$gene_n <- sub('five_genes', '5', power$gene_n)
 
 # make plot
 power_plot <- ggplot(data = power, aes(x= N, y=power, group=gene_n, colour = gene_n)) +
   geom_line() +
-  geom_point()
+  geom_point() +
+  xlab('Sample size') +
+  ylab('Power')
+
+power_plot
 
 
 # save plot
