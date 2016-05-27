@@ -18,6 +18,7 @@
 
 library(dplyr)
 library(tidyr)
+library(ggplot2)
 
 input_file <- 'data/SKAT_power_summary_no_path.tsv'
 
@@ -35,24 +36,40 @@ bootstrap_raw <- bootstrap_raw[bootstrap_raw$SetID != "SetID",]
 by_N <- bootstrap_raw %>% 
   group_by(N, ID) %>% 
   nest() %>% 
-  mutate(one_gene = purrr::map(data, ~ significant(., 'p_adjust')))
+  mutate(one_gene = purrr::map(data, ~ significant(., 'p_adjust'))) %>% 
+  mutate(two_genes = purrr::map(data, ~ significant(., 'p_adjust', 2))) %>% 
+  mutate(three_genes = purrr::map(data, ~ significant(., 'p_adjust', 3))) %>% 
+  mutate(four_genes = purrr::map(data, ~ significant(., 'p_adjust', 4))) %>% 
+  mutate(five_genes = purrr::map(data, ~ significant(., 'p_adjust', 5))) %>% 
+  unnest(one_gene) %>% 
+  unnest(two_genes) %>% 
+  unnest(three_genes) %>% 
+  unnest(four_genes) %>% 
+  unnest(five_genes)
 
-by_N <- by_N %>% 
-  mutate(two_genes = purrr::map(data, ~ significant(., 'p_adjust', 2)))
-  
-by_N <- by_N %>% 
-  mutate(three_genes = purrr::map(data, ~ significant(., 'p_adjust', 3)))
+# make long so it can be plotted
+by_N_long <- gather(by_N, gene_n, sig, one_gene:five_genes)
 
-by_N <- by_N %>% 
-  mutate(four_genes = purrr::map(data, ~ significant(., 'p_adjust', 4)))
+# make gene_n a factor
+by_N_long$gene_n <- as.factor(by_N_long$gene_n)
 
-by_N <- by_N %>% 
-  mutate(five_genes = purrr::map(data, ~ significant(., 'p_adjust', 5)))
+# get proportions to plot
+power <- by_N_long %>% 
+  group_by(N, gene_n) %>%  
+  summarise(sum(sig)/length(sig))
 
-# make by_N a dataframe with N, ID, and 0 or 1 for each of the gene columns
-by_N <- by_N %>% unnest(one_gene) %>% unnest(two_genes) %>% unnest(three_genes) %>% unnest(four_genes) %>% unnest(five_genes)
+colnames(power) <- c('N', 'gene_n', 'power')
+
+# make N a number
+power$N <- as.numeric(as.character(power$N))
+
+# reorder levels
 
 # make plot
+power_plot <- ggplot(data = power, aes(x= N, y=power, group=gene_n, colour = gene_n)) +
+  geom_line() +
+  geom_point()
+
 
 # save plot
 
