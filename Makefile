@@ -25,14 +25,25 @@ all: data/Table_S3.csv data/Table_S4.csv data/Table_S5.csv data/Table_S6.csv
 ## Analysis of amphid dye-filling phenotype
 ##======================================================================================
 
-## Transforms count data to a logit transformed proportion. This script takes 2
-## arguments: (1) a comma delimited .csv file (which has 5 columns: Strain,
-## phenotype, N), and (2) output filename.
+## Transforms data count data to a proportion. This script takes 2
+## arguments: (1) a comma delimited .csv file (which has 3 columns: Strain,
+## phenotype_count, N), and (2) output filename.
 ##
-## Returns a tab delimited .tsv file (which has 4 columns: strain, phenotype,
-## dyf_proportion, and logit(dyf_proportion)).
-data/phenotype_amphid_dyf_log.tsv: bin/log_transform_phenotype.R data/phenotype_amphid_dyf.csv
-	Rscript bin/log_transform_phenotype.R data/phenotype_amphid_dyf.csv data/phenotype_amphid_dyf_log.tsv data/amphid
+## Returns a tab delimited .tsv file (which has 3 columns: strain, N, prop).
+data/phenotype_amphid_dyf_not_transformed.tsv: bin/get_proportions.R data/phenotype_amphid_dyf.csv
+	Rscript bin/get_proportions.R data/phenotype_amphid_dyf.csv data/phenotype_amphid_dyf_not_transformed.tsv
+
+## Transforms count data to a log transformed proportion. This script takes 2
+## arguments: (1) a comma delimited .csv file (which has 3 columns: Strain,
+## phenotype_count, N), and (2) output filename.
+##
+## Returns a tab delimited .tsv file (which has 4 columns: strain, N, log_prop, constant).
+data/phenotype_amphid_dyf_log_05.tsv: bin/log_transform_phenotype.R data/phenotype_amphid_dyf.csv
+	Rscript bin/log_transform_phenotype.R data/phenotype_amphid_dyf.csv data/phenotype_amphid_dyf_log_05.tsv 0.05 data/amphid_log_05
+
+data/phenotype_amphid_dyf_log_005.tsv: bin/log_transform_phenotype.R data/phenotype_amphid_dyf.csv
+	Rscript bin/log_transform_phenotype.R data/phenotype_amphid_dyf.csv data/phenotype_amphid_dyf_log_005.tsv 0.005 data/amphid_log_005
+
 
 ## Extracts the strain column from the data/phenotype_amphid_dyf_log.tsv file created
 ## above and saves it as list_VCstrains_vcf.txt
@@ -70,8 +81,15 @@ data/amphid_dyf data/amphid_dyf/MMPfiltered.fam data/amphid_dyf/MMPfiltered.bim 
 	plink --vcf data/MMPfiltered.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out data/amphid_dyf/MMPfiltered
 
 ## Perform linear regression SKAT analysis
-data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_log.tsv
+data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_not_transformed.tsv
 	Rscript bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_log.tsv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
+
+
+data/amphid_dyf/SKAT_no_weights_results_log_05.txt data/amphid_dyf/SKAT_weights_results_log_05.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_log_05.tsv
+	Rscript bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_log.tsv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt _log_05
+
+data/amphid_dyf/SKAT_no_weights_results_log_005.txt data/amphid_dyf/SKAT_weights_results_log_005.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_log_005.tsv
+	Rscript bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_log.tsv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt _log_005
 
 ## Create Table S3 (Genome-wide association results from the SKAT of MMP DNA
 ## sequence variance and amphid dye-filling when variants were assigned biologically
@@ -99,8 +117,11 @@ data/Table_S5.csv: bin/create_supp_results_table.R data/amphid_dyf/SKAT_no_weigh
 ## from wild-type (Fisher's exact test) and contain 1 if strain's phenotype diverges
 ## significantly from wild-type, and 0 if it does not. A 5% FDR (Benjamini-Hochberg
 ## procedure) is used to adjust for multiple comparisons.
-data/phenotype_phasmid_dyf_log.tsv: bin/log_transform_phenotype.R data/phenotype_phasmid_dyf.csv
-	Rscript bin/log_transform_phenotype.R data/phenotype_phasmid_dyf.csv data/phenotype_phasmid_dyf_log.tsv data/phasmid
+data/phenotype_phasmid_dyf_log_05.tsv: bin/log_transform_phenotype.R data/phenotype_phasmid_dyf.csv
+	Rscript bin/log_transform_phenotype.R data/phenotype_phasmid_dyf.csv data/phenotype_phasmid_dyf_log_05.tsv 0.05 data/phasmid_log_05
+
+data/phenotype_phasmid_dyf_log_005.tsv: bin/log_transform_phenotype.R data/phenotype_phasmid_dyf.csv
+	Rscript bin/log_transform_phenotype.R data/phenotype_phasmid_dyf.csv data/phenotype_phasmid_dyf_log_005.tsv 0.005 data/phasmid_log_005
 
 ## Create binary plink files for phasmid phenotype from filtered .vcf file
 data/phasmid_dyf data/phasmid_dyf/MMPfiltered.fam data/phasmid_dyf/MMPfiltered.bim data/phasmid_dyf/MMPfiltered.bed data/phasmid_dyf/MMPfiltered.log: data/MMPfiltered.vcf
