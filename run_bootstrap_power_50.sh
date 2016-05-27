@@ -7,4 +7,4 @@
 udocker load --input docker_images/mmp-dyf-skat.tar
 
 # run Makefile to make all targets for Million-Mutation-Project-dye-filling-SKAT in ttimbers/mmp-dyf-skat
-udocker run --rm -w /gs/project/qkh-103-aa/Million-Mutation-Project-dye-filling-SKAT ttimbers/mmp-dyf-skat bash /gs/project/qkh-103-aa/Million-Mutation-Project-dye-filling-SKAT/bin/bootstrap_power.sh '50'
+udocker run --rm -w /home/ttimbers/projects/Million-Mutation-Project-dye-filling-SKAT ttimbers/mmp-dyf-skat bash /home/ttimbers/projects/Million-Mutation-Project-dye-filling-SKAT/bin/bootstrap_power.sh '50'
