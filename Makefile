@@ -82,30 +82,38 @@ data/amphid_dyf data/amphid_dyf/MMPfiltered.fam data/amphid_dyf/MMPfiltered.bim 
 
 ## Perform linear regression SKAT analysis
 data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_not_transformed.tsv
-	Rscript bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_log.tsv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
+	Rscript bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_not_transformed.tsv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
 
 data/amphid_dyf/SKAT_pANDq_no_weights_results_log_05.txt data/amphid_dyf/SKAT_pANDq_weights_results_log_05.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_log_05.tsv
-	Rscript bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_log.tsv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt _log_05
+	Rscript bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_log_05.tsv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt _log_05
 
 data/amphid_dyf/SKAT_pANDq_no_weights_results_log_005.txt data/amphid_dyf/SKAT_pANDq_weights_results_log_005.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_log_005.tsv
-	Rscript bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_log.tsv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt _log_005
+	Rscript bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_log_005.tsv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt _log_005
 
 ## Create Table S3 (Genome-wide association results from the SKAT of MMP DNA
 ## sequence variance and amphid dye-filling when variants were assigned biologically
 ## relevant weights. Results are sorted by p-value)
-data/Table_S3.csv: bin/create_supp_results_table.R data/amphid_dyf/SKAT_pANDq_weights_results.txt data/gene_publicName_N_sequenceName.txt
-	Rscript bin/create_supp_results_table.R data/amphid_dyf/SKAT_pANDq_weights_results.txt data/gene_publicName_N_sequenceName.txt data/Table_S3.csv
+data/Table_S3.csv: bin/create_supp_results_table.R data/amphid_dyf/SKAT_pANDq_weights_results_log_005.txt data/gene_publicName_N_sequenceName.txt
+	Rscript bin/create_supp_results_table.R data/amphid_dyf/SKAT_pANDq_weights_results_log_005.txt data/gene_publicName_N_sequenceName.txt data/Table_S3.csv
 
 ## Create Table S5 (Table S5. Genome-wide association results from the SKAT of MMP DNA
 ## sequence variance and amphid dye-filling when all variants were weighted equally.
 ## Results are sorted by p-value)
-data/Table_S5.csv: bin/create_supp_results_table.R data/amphid_dyf/SKAT_no_weights_results.txt data/gene_publicName_N_sequenceName.txt
-	Rscript bin/create_supp_results_table.R data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/gene_publicName_N_sequenceName.txt data/Table_S5.csv
+data/Table_S5.csv: bin/create_supp_results_table.R data/amphid_dyf/SKAT_pANDq_no_weights_results_log_005.txt data/gene_publicName_N_sequenceName.txt
+	Rscript bin/create_supp_results_table.R data/amphid_dyf/SKAT_pANDq_no_weights_results_log_005.txt data/gene_publicName_N_sequenceName.txt data/Table_S5.csv
 
 
 ##======================================================================================
 ## Analysis of phasmid dye-filling phenotype
 ##======================================================================================
+
+## Transforms data count data to a proportion. This script takes 2
+## arguments: (1) a comma delimited .csv file (which has 3 columns: Strain,
+## phenotype_count, N), and (2) output filename.
+##
+## Returns a tab delimited .tsv file (which has 3 columns: strain, N, prop).
+data/phenotype_phasmid_dyf_not_transformed.tsv: bin/get_proportions.R data/phenotype_phasmid_dyf.csv
+	Rscript bin/get_proportions.R data/phenotype_phasmid_dyf.csv data/phenotype_phasmid_dyf_not_transformed.tsv
 
 ## Assign dichotomous phasmid dye-filling phenotype to strains. This script takes 2
 ## arguments: (1) a comma delimited .csv file (which has 5 columns: Strain,
@@ -127,21 +135,28 @@ data/phasmid_dyf data/phasmid_dyf/MMPfiltered.fam data/phasmid_dyf/MMPfiltered.b
 	if [ ! -d "data/phasmid_dyf/" ]; then mkdir data/phasmid_dyf; fi;
 	plink --vcf data/MMPfiltered.vcf --allow-extra-chr --out data/phasmid_dyf/MMPfiltered
 
-## Perform SKAT analysis (use SSID file made above)
-data/phasmid_dyf/SKAT_no_weights_results.txt data/phasmid_dyf/SKAT_weights_results.txt data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt: bin/do_linear_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_log.tsv data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
-	Rscript bin/do_linear_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_log.tsv data/phasmid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
+## Perform linear regression SKAT analysis
+data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/phasmid_dyf/SKAT_pANDq_weights_results.txt: bin/do_linear_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_phasmid_dyf_not_transformed.tsv
+	Rscript bin/do_linear_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_not_transformed.tsv data/phasmid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
+
+data/phasmid_dyf/SKAT_pANDq_no_weights_results_log_05.txt data/phasmid_dyf/SKAT_pANDq_weights_results_log_05.txt: bin/do_linear_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_phasmid_dyf_log_05.tsv
+	Rscript bin/do_linear_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_log_05.tsv data/phasmid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt _log_05
+
+data/phasmid_dyf/SKAT_pANDq_no_weights_results_log_005.txt data/phasmid_dyf/SKAT_pANDq_weights_results_log_005.txt: bin/do_linear_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_phasmid_dyf_log_005.tsv
+	Rscript bin/do_linear_SKAT.R data/phasmid_dyf/MMPfiltered.fam data/phenotype_phasmid_dyf_log_005.tsv data/phasmid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt _log_005
+
 
 ## Create Table S4 (Genome-wide association results from the SKAT of MMP DNA
 ## sequence variance and phasmid dye-filling when variants were assigned biologically
 ## relevant weights. Results are sorted by p-value)
-data/Table_S4.csv: bin/create_supp_results_table.R data/phasmid_dyf/SKAT_weights_results.txt data/gene_publicName_N_sequenceName.txt
-	Rscript bin/create_supp_results_table.R data/phasmid_dyf/SKAT_pANDq_weights_results.txt data/gene_publicName_N_sequenceName.txt data/Table_S4.csv
+data/Table_S4.csv: bin/create_supp_results_table.R data/phasmid_dyf/SKAT_pANDq_weights_results_log_05.txt data/gene_publicName_N_sequenceName.txt
+	Rscript bin/create_supp_results_table.R data/phasmid_dyf/SKAT_pANDq_weights_results_log_05.txt data/gene_publicName_N_sequenceName.txt data/Table_S4.csv
 
 ## Create Table S6 (Genome-wide association results from the SKAT of MMP DNA
 ## sequence variance and phasmid dye-filling when all variants were weighted equally.
 ## Results are sorted by p-value)
-data/Table_S6.csv: bin/create_supp_results_table.R data/phasmid_dyf/SKAT_no_weights_results.txt data/gene_publicName_N_sequenceName.txt
-	Rscript bin/create_supp_results_table.R data/phasmid_dyf/SKAT_pANDq_no_weights_results.txt data/gene_publicName_N_sequenceName.txt data/Table_S6.csv
+data/Table_S6.csv: bin/create_supp_results_table.R data/phasmid_dyf/SKAT_pANDq_no_weights_results_log_05.txt data/gene_publicName_N_sequenceName.txt
+	Rscript bin/create_supp_results_table.R data/phasmid_dyf/SKAT_pANDq_no_weights_results_log_05.txt data/gene_publicName_N_sequenceName.txt data/Table_S6.csv
 
 ##======================================================================================
 ## Bootstrap Power Analysis

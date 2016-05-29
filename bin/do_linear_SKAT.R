@@ -70,13 +70,13 @@ main <- function() {
 	#write.table(p.values.no.weights, paste0(path_to_plink_files,"/SKAT_no_weights_results", postfix,".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## plot qqplot for no weights analysis
-	pdf(paste0(path_to_plink_files, 'qqplot_no_weights', postfix, '.pdf'), height = 3, width = 3)
-	qq(p.values.no.weights)
+	pdf(paste0(path_to_plink_files, '/qqplot_no_weights', postfix, '.pdf'), height = 3, width = 3)
+	qq(p.values.no.weights$P.value)
 	dev.off()
 	
 	## do False Discovery Rate analysis for SKAT without weights
 	all_pvals <- p.values.no.weights
-	all_pvals$p_adjust <- p.adjust(all_pvals$P.value,  method = "bonferroni")
+	all_pvals$p_adjust <- p.adjust(all_pvals$P.value,  method = "BH")
 
 	write.table(all_pvals, paste0(path_to_plink_files, "/SKAT_pANDq_no_weights_results", postfix, ".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
@@ -90,13 +90,13 @@ main <- function() {
 	#write.table(p.values.weights, paste0(path_to_plink_files, "/SKAT_weights_results", postfix, ".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## plot qqplot for SKAT with weights
-	pdf(paste0(path_to_plink_files, 'qqplot_weights', postfix, '.pdf'), height = 3, width = 3)
-	qq(p.values.no.weights)
+	pdf(paste0(path_to_plink_files, '/qqplot_weights', postfix, '.pdf'), height = 3, width = 3)
+	qq(p.values.weights$P.value)
 	dev.off()
 	
 	## do False Discovery Rate analysis for SKAT with weights
 	all_pvals_weights <- p.values.weights
-	all_pvals_weights$p_adjust <- p.adjust(all_pvals_weights$P.value, method = "bonferroni")
+	all_pvals_weights$p_adjust <- p.adjust(all_pvals_weights$P.value, method = "BH")
 
 	write.table(all_pvals_weights, paste0(path_to_plink_files, "/SKAT_pANDq_weights_results", postfix, ".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
