@@ -7,6 +7,7 @@
 ## 	3. path to PLINK files
 ## 	4. path to SSID file
 ##	5. path to weights file
+##  6. postfix for output file
 ##
 ## Outputs:
 ##	1. SKAT results file for analysis with no weights
@@ -30,6 +31,7 @@ main <- function() {
 	path_to_plink_files <- args[3]
   SSID_file <- args[4]
 	weights.file <- args[5]
+	postfix <- args[6]
 
 	## write phenotype to the fam file
 	write_to_fam(path_to_fam_file, path_to_phenotype.filename)
@@ -64,13 +66,13 @@ main <- function() {
 	## sort All_SKAT_Data.no.weights by p-value
 	mydata.SKAT.no.weights <- All_SKAT_Data.no.weights$results
 	p.values.no.weights <- mydata.SKAT.no.weights[order(mydata.SKAT.no.weights[,2]),]
-	write.table(p.values.no.weights, paste(path_to_plink_files,"/SKAT_no_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
+	write.table(p.values.no.weights, paste0(path_to_plink_files,"/SKAT_no_weights_results", postfix,".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## do False Discovery Rate analysis for SKAT without weights
 	all_pvals <- p.values.no.weights
 	all_pvals$p_adjust <- p.adjust(all_pvals$P.value,  method = "bonferroni")
 
-	write.table(all_pvals, paste(path_to_plink_files, "/SKAT_pANDq_no_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
+	write.table(all_pvals, paste0(path_to_plink_files, "/SKAT_pANDq_no_weights_results", postfix, ".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## perform SKAT on all sets of variants with weights
 	set.seed(1234)
@@ -79,13 +81,13 @@ main <- function() {
 	## sort All_SKAT_Data by p-value
 	mydata.SKAT.weights <- All_SKAT_Data$results
 	p.values.weights <- mydata.SKAT.weights[order(mydata.SKAT.weights[,2]),]
-	write.table(p.values.weights, paste(path_to_plink_files, "/SKAT_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
+	write.table(p.values.weights, paste0(path_to_plink_files, "/SKAT_weights_results", postfix, ".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## do False Discovery Rate analysis for SKAT with weights
 	all_pvals_weights <- p.values.weights
 	all_pvals_weights$p_adjust <- p.adjust(all_pvals_weights$P.value, method = "bonferroni")
 
-	write.table(all_pvals_weights, paste(path_to_plink_files, "/SKAT_pANDq_weights_results.txt", sep=""), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
+	write.table(all_pvals_weights, paste0(path_to_plink_files, "/SKAT_pANDq_weights_results", postfix, ".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## output time to run script
   	the_time <- proc.time() - ptm # Stop the clock
