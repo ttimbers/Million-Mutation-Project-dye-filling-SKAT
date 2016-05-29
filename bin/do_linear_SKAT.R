@@ -67,7 +67,7 @@ main <- function() {
 	## sort All_SKAT_Data.no.weights by p-value
 	mydata.SKAT.no.weights <- All_SKAT_Data.no.weights$results
 	p.values.no.weights <- mydata.SKAT.no.weights[order(mydata.SKAT.no.weights[,2]),]
-	write.table(p.values.no.weights, paste0(path_to_plink_files,"/SKAT_no_weights_results", postfix,".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
+	#write.table(p.values.no.weights, paste0(path_to_plink_files,"/SKAT_no_weights_results", postfix,".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## plot qqplot for no weights analysis
 	pdf(paste0(path_to_plink_files, 'qqplot_no_weights', postfix, '.pdf'), height = 3, width = 3)
@@ -87,7 +87,7 @@ main <- function() {
 	## sort All_SKAT_Data by p-value
 	mydata.SKAT.weights <- All_SKAT_Data$results
 	p.values.weights <- mydata.SKAT.weights[order(mydata.SKAT.weights[,2]),]
-	write.table(p.values.weights, paste0(path_to_plink_files, "/SKAT_weights_results", postfix, ".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
+	#write.table(p.values.weights, paste0(path_to_plink_files, "/SKAT_weights_results", postfix, ".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
 	## plot qqplot for SKAT with weights
 	pdf(paste0(path_to_plink_files, 'qqplot_weights', postfix, '.pdf'), height = 3, width = 3)

@@ -47,8 +47,8 @@ data/phenotype_amphid_dyf_log_005.tsv: bin/log_transform_phenotype.R data/phenot
 
 ## Extracts the strain column from the data/phenotype_amphid_dyf_log.tsv file created
 ## above and saves it as list_VCstrains_vcf.txt
-data/list_VCstrains_vcf.txt: data/phenotype_amphid_dyf_log.tsv
-	awk '{print $$1}' data/phenotype_amphid_dyf_log.tsv | grep -h "^VC*" > data/list_VCstrains_vcf.txt
+data/list_VCstrains_vcf.txt: data/phenotype_amphid_dyf_not_transformed.tsv
+	awk '{print $$1}' data/phenotype_amphid_dyf_not_transformed.tsv | grep -h "^VC*" > data/list_VCstrains_vcf.txt
 
 ## Creates one merged .vcf file for only the strains that were assayed (listed in a file
 ## called list_VCstrains_vcf.txt. Uses -protein argument creates a merged .vcf file with
@@ -81,19 +81,19 @@ data/amphid_dyf data/amphid_dyf/MMPfiltered.fam data/amphid_dyf/MMPfiltered.bim 
 	plink --vcf data/MMPfiltered.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out data/amphid_dyf/MMPfiltered
 
 ## Perform linear regression SKAT analysis
-data/amphid_dyf/SKAT_no_weights_results.txt data/amphid_dyf/SKAT_weights_results.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_not_transformed.tsv
+data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_not_transformed.tsv
 	Rscript bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_log.tsv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt
 
-data/amphid_dyf/SKAT_no_weights_results_log_05.txt data/amphid_dyf/SKAT_weights_results_log_05.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_log_05.tsv
+data/amphid_dyf/SKAT_pANDq_no_weights_results_log_05.txt data/amphid_dyf/SKAT_pANDq_weights_results_log_05.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_log_05.tsv
 	Rscript bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_log.tsv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt _log_05
 
-data/amphid_dyf/SKAT_no_weights_results_log_005.txt data/amphid_dyf/SKAT_weights_results_log_005.txt data/amphid_dyf/SKAT_pANDq_no_weights_results.txt data/amphid_dyf/SKAT_pANDq_weights_results.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_log_005.tsv
+data/amphid_dyf/SKAT_pANDq_no_weights_results_log_005.txt data/amphid_dyf/SKAT_pANDq_weights_results_log_005.txt: bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/MMP_SNP_WeightFile.txt data/MMPfiltered.SSID data/phenotype_amphid_dyf_log_005.tsv
 	Rscript bin/do_linear_SKAT.R data/amphid_dyf/MMPfiltered.fam data/phenotype_amphid_dyf_log.tsv data/amphid_dyf data/MMPfiltered.SSID data/MMP_SNP_WeightFile.txt _log_005
 
 ## Create Table S3 (Genome-wide association results from the SKAT of MMP DNA
 ## sequence variance and amphid dye-filling when variants were assigned biologically
 ## relevant weights. Results are sorted by p-value)
-data/Table_S3.csv: bin/create_supp_results_table.R data/amphid_dyf/SKAT_weights_results.txt data/gene_publicName_N_sequenceName.txt
+data/Table_S3.csv: bin/create_supp_results_table.R data/amphid_dyf/SKAT_pANDq_weights_results.txt data/gene_publicName_N_sequenceName.txt
 	Rscript bin/create_supp_results_table.R data/amphid_dyf/SKAT_pANDq_weights_results.txt data/gene_publicName_N_sequenceName.txt data/Table_S3.csv
 
 ## Create Table S5 (Table S5. Genome-wide association results from the SKAT of MMP DNA
