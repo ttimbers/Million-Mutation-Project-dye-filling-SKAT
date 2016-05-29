@@ -5,8 +5,7 @@
 #   1. a comma delimited .csv file (which has 5 columns: Strain,phenotype, N)
 #   2. output filename
 #
-# Returns a tab delimited .tsv file (which has 4 columns: strain, phenotype, dyf_proportion, 
-# and logit(dyf_proportion)).
+# Returns a tab delimited .tsv file (which has 4 columns: Strain, N, log_prop).
 
 main <- function(){
   
