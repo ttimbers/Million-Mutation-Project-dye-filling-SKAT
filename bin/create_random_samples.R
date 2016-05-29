@@ -21,7 +21,6 @@ main <- function() {
 	args <- commandArgs(trailingOnly = TRUE)
 	input_file <- args[1]
 	delim <- args[2]
-	print(delim)
 	is_header <- as.logical(args[3])
 	sample_col <- args[4]
 	sample_N <- as.numeric(args[5])
