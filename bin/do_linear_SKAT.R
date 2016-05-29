@@ -21,8 +21,9 @@ main <- function() {
   	ptm <- proc.time()
 
 	## load libraries
-	require(SKAT)
-	require(fdrtool)
+	library(SKAT)
+	library(fdrtool)
+  library(qqman)
 
 	## assign command line arguements
 	args <- commandArgs(trailingOnly = TRUE)
@@ -68,6 +69,11 @@ main <- function() {
 	p.values.no.weights <- mydata.SKAT.no.weights[order(mydata.SKAT.no.weights[,2]),]
 	write.table(p.values.no.weights, paste0(path_to_plink_files,"/SKAT_no_weights_results", postfix,".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
+	## plot qqplot for no weights analysis
+	pdf(paste0(path_to_plink_files, 'qqplot_no_weights', postfix, '.pdf'), height = 3, width = 3)
+	qq(p.values.no.weights)
+	dev.off()
+	
 	## do False Discovery Rate analysis for SKAT without weights
 	all_pvals <- p.values.no.weights
 	all_pvals$p_adjust <- p.adjust(all_pvals$P.value,  method = "bonferroni")
@@ -83,6 +89,11 @@ main <- function() {
 	p.values.weights <- mydata.SKAT.weights[order(mydata.SKAT.weights[,2]),]
 	write.table(p.values.weights, paste0(path_to_plink_files, "/SKAT_weights_results", postfix, ".txt"), sep="\t", row.names=FALSE, quote=FALSE, append=FALSE)
 
+	## plot qqplot for SKAT with weights
+	pdf(paste0(path_to_plink_files, 'qqplot_weights', postfix, '.pdf'), height = 3, width = 3)
+	qq(p.values.no.weights)
+	dev.off()
+	
 	## do False Discovery Rate analysis for SKAT with weights
 	all_pvals_weights <- p.values.weights
 	all_pvals_weights$p_adjust <- p.adjust(all_pvals_weights$P.value, method = "bonferroni")
