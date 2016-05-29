@@ -34,15 +34,14 @@ Rscript bin/create_reduced_variant_files.R data/$cID/temp_MMPcoding.vcf data/$cI
 ## 3: weight to assign inframe deletions
 ## 4: weight to assign missense mutations
 ## 5: name of file to save variant weights to
-data/MMP_SNP_WeightFile.txt: bin/Make_custom_variant_weights.R data/MMPfiltered.vcf
-	Rscript bin/Make_custom_variant_weights.R data/MMPfiltered.vcf 1 0.75 0.25 data/MMP_SNP_WeightFile.txt
+Rscript bin/Make_custom_variant_weights.R data/$cID/temp_MMPfiltered.vcf 1 0.75 0.25 data/$cID/temp_MMP_SNP_WeightFile.txt
 
 ## Create binary plink files from the vcf file
 #if [ ! -d "data/$cID" ]; then mkdir data/$cID; fi
 plink --vcf data/$cID/temp_MMPfiltered.vcf --allow-extra-chr --no-fid --no-parents --no-sex --no-pheno --out data/$cID/temp_MMPfiltered
 
 ## Perform SKAT analysis
-Rscript bin/do_SKAT_weights.R data/$cID/temp_MMPfiltered.fam data/$cID/temp_phenotype_amphid_dyf_log.tsv data/$cID data/$cID/temp_MMPfiltered.SSID
+Rscript bin/do_SKAT_weights.R data/$cID/temp_MMPfiltered.fam data/$cID/temp_phenotype_amphid_dyf_log.tsv data/$cID data/$cID/temp_MMPfiltered.SSID data/$cID/temp_MMP_SNP_WeightFile.txt
 
 ## add N to dataframe
 Rscript bin/add_column_to_tsv.R data/$cID/SKAT_weights.tsv $1 N data/$cID/SKAT_weights.tsv
