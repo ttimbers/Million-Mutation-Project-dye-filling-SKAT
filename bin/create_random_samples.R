@@ -36,11 +36,9 @@ main <- function() {
 	} else if (str_detect(delim, ',')) {
 	  df <- read.table(file = input_file, sep = ',', header = is_header)
 	}
-	print(head(df))
 
 	# get random samples from the data frame
 	sampled_df <- get_random_sample(x = df, col = sample_col, N = sample_N)
-	print(head(sampled_df))
 
 	# write sampled data frame to file
 	if (str_detect(delim, 't')){
