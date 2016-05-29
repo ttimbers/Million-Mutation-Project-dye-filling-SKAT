@@ -16,7 +16,7 @@ main <- function() {
   	ptm <- proc.time()
 
 	## load libraries
-	require(SKAT)
+	library(SKAT)
 
 	## assign command line arguements
 	args <- commandArgs(trailingOnly = TRUE)

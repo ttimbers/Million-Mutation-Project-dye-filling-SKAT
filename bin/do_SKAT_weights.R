@@ -16,7 +16,7 @@ main <- function() {
   	ptm <- proc.time()
 
 	## load libraries
-	require(SKAT)
+	library(SKAT)
 
 	## assign command line arguements
 	args <- commandArgs(trailingOnly = TRUE)
@@ -44,7 +44,7 @@ main <- function() {
 
 	## get mutation weights
 	SNPweights <- Read_SNP_WeightFile(weights.file)
-	
+
 	## get SSD info from created file
 	SSD.info <- Open_SSD(paste(path_to_plink_files, "/file.SSD", sep=""), paste(path_to_plink_files, "/file.info", sep=""))
 
